@@ -5,6 +5,9 @@ include_directories(${PROJECT_SOURCE_DIR}/include)
 # common library source files
 set(COMMON_SOURCE
     Common.cpp
+    Vector2D.cpp
+    Vector3D.cpp
+    Vector4D.cpp
 )
 
 #-------------------------------------------------------------------------------

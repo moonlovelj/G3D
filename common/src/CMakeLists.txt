@@ -8,6 +8,7 @@ set(COMMON_SOURCE
     Vector2D.cpp
     Vector3D.cpp
     Vector4D.cpp
+    Matrix3x3.cpp
 )
 
 #-------------------------------------------------------------------------------

@@ -42,7 +42,7 @@ namespace g3dcommon
 
     inline Vector2D operator+(const Vector2D& v) const
     {
-      return Vector2D(x + v.y, y + v.y);
+      return Vector2D(x + v.x, y + v.y);
     }
 
     inline Vector2D operator-(const Vector2D& v) const

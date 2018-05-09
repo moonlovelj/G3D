@@ -53,7 +53,7 @@ namespace g3dcommon
 
     inline Vector3D operator+(const Vector3D& v) const
     {
-      return Vector3D(x + v.y, y + v.y, z + v.z);
+      return Vector3D(x + v.x, y + v.y, z + v.z);
     }
 
     inline Vector3D operator-(const Vector3D& v) const

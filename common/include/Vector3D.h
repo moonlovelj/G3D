@@ -28,14 +28,6 @@ namespace g3dcommon
 
     Vector3D(const Vector3D& v) : x(v.x), y(v.y), z(v.z) { }
 
-    inline Vector3D& operator=(const Vector3D& v)
-    {
-      x = v.x;
-      y = v.y;
-      z = v.z;
-      return *this;
-    }
-
     inline float& operator[](const int& index)
     {
       return m[index];
@@ -101,24 +93,24 @@ namespace g3dcommon
       z *= rf;
     }
 
-    inline float norm() const
+    inline float Norm() const
     {
       return sqrt(x*x + y*y + z*z);
     }
 
-    inline float norm2() const
+    inline float Norm2() const
     {
       return x*x + y*y + z*z;
     }
 
-    inline Vector3D unit() const
+    inline Vector3D Unit() const
     {
-      return *this / this->norm();
+      return *this / this->Norm();
     }
 
-    inline void normalize()
+    inline void Normalize()
     {
-      *this /= this->norm();
+      *this /= this->Norm();
     }
   };
 
@@ -127,12 +119,12 @@ namespace g3dcommon
     return v*f;
   }
 
-  inline float dot(const Vector3D& v1, const Vector3D& v2)
+  inline float Dot(const Vector3D& v1, const Vector3D& v2)
   {
     return v1.x*v2.x + v1.y*v2.y + v1.z*v2.z;
   }
 
-  inline Vector3D cross(const Vector3D& v1, const Vector3D& v2)
+  inline Vector3D Cross(const Vector3D& v1, const Vector3D& v2)
   {
     return Vector3D(v1.y*v2.z - v1.z*v2.y,
       v1.z*v2.x - v1.x*v2.z,

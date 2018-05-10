@@ -35,27 +35,27 @@ namespace g3dcommon
     /**
     * Returns the 4x4 identity matrix.
     */
-    static Matrix4x4 identity();
+    static Matrix4x4 Identity();
 
     /**
     * Returns matrix encoding a 3D counter-clockwise rotation by the angle theta in homogeneous coordinates. The angle is given in Radians.
     */
-    static Matrix4x4 rotation(float theta, Axis axis);
+    static Matrix4x4 Rotation(float theta, Axis axis);
 
     /**
     * Returns matrix encoding 3D translation by the vector t in homogeneous coordinates.
     */
-    static Matrix4x4 translation(Vector3D t);
+    static Matrix4x4 Translation(Vector3D t);
 
     /**
     * Returns matrix encoding 3D scaling by the vector s in homogeneous coordinates.
     */
-    static Matrix4x4 scaling(Vector3D s);
+    static Matrix4x4 Scaling(Vector3D s);
 
     /**
     * Returns the determinant of m.
     */
-    float det() const;
+    float Det() const;
 
     /**
     * Returns the transpose of m.
@@ -65,7 +65,7 @@ namespace g3dcommon
     /**
     * Returns the inverse of A.
     */
-    Matrix4x4 inv() const;
+    Matrix4x4 Inv() const;
 
     // accesses element (i,j) of A using 0-based indexing
           float& operator()(int i, int j);

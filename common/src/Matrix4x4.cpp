@@ -2,7 +2,7 @@
 
 namespace g3dcommon {
 
-  Matrix4x4 Matrix4x4::identity()
+  Matrix4x4 Matrix4x4::Identity()
   {
     Matrix4x4 A;
     A(0, 0) = 1.f; A(0, 1) = 0.f; A(0, 2) = 0.f; A(0, 3) = 0.f;
@@ -13,7 +13,7 @@ namespace g3dcommon {
     return A;
   }
 
-  Matrix4x4 Matrix4x4::rotation(float theta, Axis axis)
+  Matrix4x4 Matrix4x4::Rotation(float theta, Axis axis)
   {
     Matrix4x4 A;
     switch (axis)
@@ -43,9 +43,9 @@ namespace g3dcommon {
     return A;
   }
 
-  Matrix4x4 Matrix4x4::translation(Vector3D t)
+  Matrix4x4 Matrix4x4::Translation(Vector3D t)
   {
-    Matrix4x4 A = Matrix4x4::identity();
+    Matrix4x4 A = Matrix4x4::Identity();
     A(3, 0) = t.x; 
     A(3, 1) = t.y;
     A(3, 2) = t.z;
@@ -53,9 +53,9 @@ namespace g3dcommon {
     return A;
   }
 
-  Matrix4x4 Matrix4x4::scaling(Vector3D s)
+  Matrix4x4 Matrix4x4::Scaling(Vector3D s)
   {
-    Matrix4x4 A = Matrix4x4::identity();
+    Matrix4x4 A = Matrix4x4::Identity();
     A(0, 0) = s.x;
     A(1, 1) = s.y;
     A(2, 2) = s.z;
@@ -63,7 +63,7 @@ namespace g3dcommon {
     return A;
   }
 
-  float Matrix4x4::det() const
+  float Matrix4x4::Det() const
   {
   return
     m03*m12*m21*m30 - m02*m13*m21*m30 -
@@ -90,7 +90,7 @@ namespace g3dcommon {
     return A;
   }
 
-  Matrix4x4 Matrix4x4::inv() const
+  Matrix4x4 Matrix4x4::Inv() const
   {
     // A is standard adjoint matrix.
     Matrix4x4 A;
@@ -111,7 +111,7 @@ namespace g3dcommon {
     A.m32 = m02*m11*m30 - m01*m12*m30 - m02*m10*m31 + m00*m12*m31 + m01*m10*m32 - m00*m11*m32;
     A.m33 = m01*m12*m20 - m02*m11*m20 + m02*m10*m21 - m00*m12*m21 - m01*m10*m22 + m00*m11*m22;
 
-    float rdet = 1.f / det();
+    float rdet = 1.f / Det();
 
     return A * rdet;
   }
@@ -205,7 +205,7 @@ namespace g3dcommon {
   Vector3D operator*(const Vector3D& v, const Matrix4x4& A)
   {
     Vector4D v4d(v.x, v.y, v.z, 1.f);
-    return (v4d*A).projectTo3D();
+    return (v4d*A).ProjectTo3D();
   }
 
   Matrix4x4 operator*(float f, const Matrix4x4& A)

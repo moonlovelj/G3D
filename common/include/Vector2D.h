@@ -28,13 +28,6 @@ namespace g3dcommon
 
     Vector2D(const Vector2D& v) : x(v.x), y(v.y) { }
 
-    inline Vector2D& operator=(const Vector2D& v)
-    {
-      x = v.x;
-      y = v.y;
-      return *this;
-    }
-
     inline Vector2D operator-() const
     {
       return Vector2D(-x, -y);
@@ -84,24 +77,24 @@ namespace g3dcommon
       y /= f;
     }
 
-    inline float norm() const
+    inline float Norm() const
     {
       return sqrt(x*x + y*y);
     }
 
-    inline float norm2() const
+    inline float Norm2() const
     {
       return x*x + y*y;
     }
 
-    inline Vector2D unit() const
+    inline Vector2D Unit() const
     {
-      return *this / this->norm();
+      return *this / this->Norm();
     }
 
-    inline void normalize()
+    inline void Normalize()
     {
-      *this /= this->norm();
+      *this /= this->Norm();
     }
   };
 
@@ -110,12 +103,12 @@ namespace g3dcommon
     return v*f;
   }
 
-  inline float dot(const Vector2D& v1, const Vector2D& v2)
+  inline float Dot(const Vector2D& v1, const Vector2D& v2)
   {
     return v1.x*v2.x + v1.y*v2.y;
   }
 
-  inline float cross(const Vector2D& v1, const Vector2D& v2)
+  inline float Cross(const Vector2D& v1, const Vector2D& v2)
   {
     return v1.x*v2.y - v2.x*v1.y;
   }

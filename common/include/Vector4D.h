@@ -30,15 +30,6 @@ namespace g3dcommon
 
     Vector4D(const Vector4D& v) : x(v.x), y(v.y), z(v.z), w(v.w) { }
 
-    inline Vector4D& operator=(const Vector4D& v)
-    {
-      x = v.x;
-      y = v.y;
-      z = v.z;
-      w = v.w;
-      return *this;
-    }
-
     inline float& operator[](const int& index)
     {
       return m[index];
@@ -108,35 +99,35 @@ namespace g3dcommon
       w *= rf;
     }
 
-    inline float norm() const
+    inline float Norm() const
     {
       return sqrt(x*x + y*y + z*z + w*w);
     }
 
-    inline float norm2() const
+    inline float Norm2() const
     {
       return x*x + y*y + z*z + w*w;
     }
 
-    inline Vector4D unit() const
+    inline Vector4D Unit() const
     {
-      return *this / this->norm();
+      return *this / this->Norm();
     }
 
-    inline void normalize()
+    inline void Normalize()
     {
-      *this /= this->norm();
+      *this /= this->Norm();
     }
 
     /**
     * Converts this vector to a 3D vector ignoring the w component.
     */
-    Vector3D to3D() const;
+    Vector3D To3D() const;
 
     /**
     * Converts this vector to a 3D vector by dividing x, y, and z by w.
     */
-    Vector3D projectTo3D() const;
+    Vector3D ProjectTo3D() const;
   };
 
   inline Vector4D operator*(float f, const Vector4D& v)
@@ -144,7 +135,7 @@ namespace g3dcommon
     return v*f;
   }
 
-  inline float dot(const Vector4D& v1, const Vector4D& v2)
+  inline float Dot(const Vector4D& v1, const Vector4D& v2)
   {
     return v1.x*v2.x + v1.y*v2.y + v1.z*v2.z + v1.w*v2.w;
   }

@@ -2,7 +2,7 @@
 
 namespace g3dcommon {
 
-  Matrix3x3 Matrix3x3::identity()
+  Matrix3x3 Matrix3x3::Identity()
   {
     Matrix3x3 A;
     A(0, 0) = 1.f; A(0, 1) = 0.f; A(0, 2) = 0.f;
@@ -11,7 +11,7 @@ namespace g3dcommon {
     return A;
   }
 
-  float Matrix3x3::det() const
+  float Matrix3x3::Det() const
   {
     return -m02*m11*m20 + m01*m12*m20 +
             m02*m10*m21 - m00*m12*m21 -
@@ -27,7 +27,7 @@ namespace g3dcommon {
     return A;
   }
 
-  Matrix3x3 Matrix3x3::inv() const
+  Matrix3x3 Matrix3x3::Inv() const
   {
     // A is standard adjoint matrix.
     Matrix3x3 A;
@@ -35,7 +35,7 @@ namespace g3dcommon {
     A.m10 = m20*m12 - m10*m22; A.m11 = m00*m22 - m20*m02; A.m12 = m10*m02 - m00*m12;
     A.m20 = m10*m21 - m20*m11; A.m21 = m20*m01 - m00*m21; A.m22 = m00*m11 - m10*m01;
 
-    float rdet = 1.f / det();
+    float rdet = 1.f / Det();
 
     return A * rdet;
   }

@@ -10,6 +10,7 @@ set(COMMON_SOURCE
     Vector4D.cpp
     Matrix3x3.cpp
     Matrix4x4.cpp
+    Quaternion.cpp
 )
 
 #-------------------------------------------------------------------------------

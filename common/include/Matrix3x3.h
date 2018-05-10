@@ -28,12 +28,12 @@ namespace g3dcommon
     /**
     * Returns the 3x3 identity matrix.
     */
-    static Matrix3x3 identity();
+    static Matrix3x3 Identity();
 
     /**
     * Returns the determinant of m.
     */
-    float det() const;
+    float Det() const;
 
     /**
     * Returns the transpose of m.
@@ -43,7 +43,7 @@ namespace g3dcommon
     /**
     * Returns the inverse of A.
     */
-    Matrix3x3 inv() const;
+    Matrix3x3 Inv() const;
 
     // accesses element (i,j) of A using 0-based indexing
           float& operator()(int i, int j);

@@ -36,6 +36,21 @@ namespace g3dcommon
                     Dot(transW2C, right), Dot(transW2C, upNew), Dot(transW2C, dir), 1);
   }
 
+  Camera::Camera(const Camera& c)
+  {
+    pos = c.pos;
+    targetPos = c.targetPos;
+    hFov = c.hFov;
+    vFov = c.vFov;
+    nClip = c.nClip;
+    fClip = c.fClip;
+    screenWidth = c.screenWidth;
+    screenHeight = c.screenHeight;
+    screenDist = c.screenDist;
+    aspectRatio = c.aspectRatio;
+    w2c = c.w2c;
+  }
+
   Camera::~Camera()
   {
 

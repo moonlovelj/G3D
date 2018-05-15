@@ -13,6 +13,8 @@ namespace g3dcommon
            const Vector3D& up, float hFov, float nClip, 
            float fClip,size_t screenWidth, size_t screenHeight);
 
+    Camera(const Camera& c);
+
     ~Camera();
 
   private:

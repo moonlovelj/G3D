@@ -11,6 +11,7 @@ set(COMMON_SOURCE
     Matrix3x3.cpp
     Matrix4x4.cpp
     Quaternion.cpp
+    Viewer.cpp
 )
 
 #-------------------------------------------------------------------------------

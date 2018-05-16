@@ -1,6 +1,9 @@
 #ifndef __VIEWER_H__
 #define __VIEWER_H__
 
+#include "Renderer.h"
+#include <SDL.h>
+#include <vector>
 
 namespace g3dcommon
 {
@@ -13,7 +16,45 @@ namespace g3dcommon
   */
   class Viewer
   {
+  public:
+    Viewer(size_t width = 960, size_t height = 640);
+    ~Viewer();
 
+    bool Init();
+
+    void Start();
+
+    void SetRenderer(Renderer* renderer);
+
+  private:
+    /**
+    * Main update loop.
+    */
+    static void Update();
+
+    /**
+    * Process close window.
+    */
+    static void Close();
+
+    // Quit window mark.
+    static bool bQuit;
+
+    // Window properties.
+    static SDL_Window* window;
+    static SDL_Surface* screenSurface;
+    static SDL_Surface* renderSurface;
+    static size_t bufferWidth;
+    static size_t bufferHeight;
+
+    // Framebuffer for renderer.
+    static std::vector<unsigned char> framebuffer;
+
+    // Event handler
+    static SDL_Event sdlEvent;
+
+    // User space renderer
+    static Renderer* renderer;
   };
 }
 

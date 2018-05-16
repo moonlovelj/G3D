@@ -24,7 +24,7 @@ namespace g3dcommon
      * Each renderer implementation should define its own destructor
      * that takes care of freeing the resources that it uses.
      */
-    virtual ~Renderer(void) { }
+    virtual ~Renderer() { }
 
     /**
      * Initialize the renderer.
@@ -32,14 +32,14 @@ namespace g3dcommon
      * to be used. The viewer will call the init function before using the
      * renderer in drawing.
      */
-    virtual void Init(void) = 0;
+    virtual void Init() = 0;
 
     /**
      * Draw content.
      * Renderers are free to define their own routines for drawing to the
      * context. The viewer calls this function on every frame update.
      */
-    virtual void Render(void) = 0;
+    virtual void Render() = 0;
 
     /**
      * Respond to buffer resize.
@@ -51,19 +51,11 @@ namespace g3dcommon
      */
     virtual void Resize(size_t w, size_t h) = 0;
 
-    /**
-      * Return a name for the renderer.
-      * If the viewer has a renderer set at initialization, it will include
-      * the renderer name in the window title.
-      */
-    virtual std::string Name(void) = 0;
+    /*
+    * Set render target and width and height of the render target.
+    */
+    virtual void SetRenderTarget(unsigned char* target, size_t width, size_t height) = 0;
 
-    /**
-     * Return a brief description of the renderer.
-     * Each renderer can define this differently. The viewer will use the
-     * returned value in the renderer section of its on-screen display.
-     */
-    virtual std::string Info(void) = 0;
 
     /**
      * Respond to cursor events.

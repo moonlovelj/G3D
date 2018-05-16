@@ -43,7 +43,6 @@ namespace g3dcommon
     // Window properties.
     static SDL_Window* window;
     static SDL_Surface* screenSurface;
-    static SDL_Surface* renderSurface;
     static size_t bufferWidth;
     static size_t bufferHeight;
 

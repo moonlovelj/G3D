@@ -39,7 +39,7 @@ namespace g3dcommon
       {
         renderTarget[i] = 255;
         renderTarget[i + 1] = 255;
-        renderTarget[i + 2] = 255;
+        renderTarget[i + 2] = 0;
         renderTarget[i + 3] = 255;
       }
     }

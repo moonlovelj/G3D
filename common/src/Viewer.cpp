@@ -6,7 +6,6 @@ namespace g3dcommon
   bool Viewer::bQuit = false;
   SDL_Window* Viewer::window = nullptr;
   SDL_Surface* Viewer::screenSurface = nullptr;
-  SDL_Surface* Viewer::renderSurface = nullptr;
   size_t Viewer::bufferWidth = 960;
   size_t Viewer::bufferHeight = 640;
   Renderer* Viewer::renderer = nullptr;
@@ -50,13 +49,6 @@ namespace g3dcommon
       {
         // Get window surface
         screenSurface = SDL_GetWindowSurface(window);
-        // Create render surface
-        renderSurface = SDL_CreateRGBSurface(0, bufferWidth, bufferHeight, 32, 0, 0, 0, 0);
-        if (renderSurface == NULL)
-        {
-          std::cout << "Pixel surface could not be created! SDL_Error:" << SDL_GetError() << std::endl;
-          success = false;
-        }
       }
     }
 
@@ -111,10 +103,14 @@ namespace g3dcommon
     {
       renderer->Render();
     }
-    memcpy((unsigned char*)renderSurface->pixels, &framebuffer[0], bufferWidth*bufferHeight);
-
-    // Apply the pixel.
-    SDL_BlitSurface(renderSurface, NULL, screenSurface, NULL);
+    // Copy render pixels to screen surface.
+    for (size_t i = 0; i < framebuffer.size(); i += 4)
+    {
+      static_cast<unsigned char*>(screenSurface->pixels)[i] = framebuffer[i + 2];
+      static_cast<unsigned char*>(screenSurface->pixels)[i + 1] = framebuffer[i + 1];
+      static_cast<unsigned char*>(screenSurface->pixels)[i + 2] = framebuffer[i];
+      static_cast<unsigned char*>(screenSurface->pixels)[i + 3] = framebuffer[i + 3];
+    }
     // Unlock surface.
     SDL_UnlockSurface(screenSurface);
     // Update the window.

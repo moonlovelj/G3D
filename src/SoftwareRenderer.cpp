@@ -1,7 +1,8 @@
 #include "SoftwareRenderer.h"
+#include <iostream>
+
 namespace g3dcommon
 {
-
 
   SoftwareRenderer::SoftwareRenderer() :
     renderTarget(nullptr)
@@ -33,16 +34,17 @@ namespace g3dcommon
 
   void SoftwareRenderer::Render()
   {
-    if (nullptr != renderTarget)
+    memset(renderTarget, 0x8F, 4 * targetWidth * targetHeight);
+    /*if (nullptr != renderTarget)
     {
-      for (int i = 0; i < 4 * targetWidth * targetHeight; i += 4)
-      {
-        renderTarget[i] = 255;
-        renderTarget[i + 1] = 255;
-        renderTarget[i + 2] = 0;
-        renderTarget[i + 3] = 255;
-      }
+    for (size_t i = 0; i < 4 * targetWidth * targetHeight; i += 4)
+    {
+    renderTarget[i] = c.R();
+    renderTarget[i + 1] = c.G();
+    renderTarget[i + 2] = c.B();
+    renderTarget[i + 3] = c.A();
     }
+    }*/
   }
 
 

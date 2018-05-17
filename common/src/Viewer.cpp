@@ -98,6 +98,8 @@ namespace g3dcommon
 
     // Lock surface.
     SDL_LockSurface(screenSurface);
+    // Clear framebuffer.
+    memset(&framebuffer[0], 0, framebuffer.size());
     // Render framebuffer by renderer.
     if (nullptr != renderer)
     {

@@ -2,6 +2,7 @@
 #define __SOFTWARERENDERER_H__
 
 #include "Renderer.h"
+#include "Color.h"
 
 namespace g3dcommon
 {

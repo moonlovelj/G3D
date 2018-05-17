@@ -1,5 +1,7 @@
 #include "Viewer.h"
 #include <iostream>
+
+
 namespace g3dcommon
 {
 
@@ -11,6 +13,9 @@ namespace g3dcommon
   Renderer* Viewer::renderer = nullptr;
   std::vector<unsigned char> Viewer::framebuffer;
   SDL_Event Viewer::sdlEvent;
+  int Viewer::fps = 0;
+  std::chrono::time_point<std::chrono::system_clock> Viewer::sysLast;
+  std::chrono::time_point<std::chrono::system_clock> Viewer::sysCurr;
 
 
   Viewer::Viewer(size_t width, size_t height)
@@ -57,6 +62,7 @@ namespace g3dcommon
 
   void Viewer::Start()
   {
+    sysLast = std::chrono::system_clock::now();
     while (!bQuit)
     {
       Update();
@@ -117,6 +123,21 @@ namespace g3dcommon
     SDL_UnlockSurface(screenSurface);
     // Update the window.
     SDL_UpdateWindowSurface(window);
+
+    // Compute fps.
+    sysCurr = std::chrono::system_clock::now();
+    double elapsed = (static_cast<std::chrono::duration<double>>(sysCurr - sysLast)).count();
+    if (elapsed >= 1.0)
+    {
+      std::cout << "FPS : " << fps << std::endl;
+      fps = 0;
+      sysLast = std::chrono::system_clock::now();
+    }
+    else
+    {
+      ++fps;
+    }
+     
   }
 
   void Viewer::Close()

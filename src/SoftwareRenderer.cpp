@@ -34,17 +34,26 @@ namespace g3dcommon
 
   void SoftwareRenderer::Render()
   {
-    memset(renderTarget, 0x8F, 4 * targetWidth * targetHeight);
-    /*if (nullptr != renderTarget)
+    for (int i = 100; i < 400;i++)
     {
-    for (size_t i = 0; i < 4 * targetWidth * targetHeight; i += 4)
-    {
-    renderTarget[i] = c.R();
-    renderTarget[i + 1] = c.G();
-    renderTarget[i + 2] = c.B();
-    renderTarget[i + 3] = c.A();
+      RasterizePoint(i, 100, Color(1.f, 0.f, 0.f, 1.f));
     }
-    }*/
+    
+  }
+
+  void SoftwareRenderer::RasterizePoint(float x, float y, Color color)
+  {
+    int sx = static_cast<int>(floor(x));
+    int sy = static_cast<int>(floor(y));
+    if (sx < 0 || sx >= targetWidth || sy < 0 || sy >= targetHeight)
+    {
+      return;
+    }
+    int index = sy * targetWidth + sx;
+    renderTarget[index * 4] = color.R();
+    renderTarget[index + 1] = color.G();
+    renderTarget[index + 2] = color.B();
+    renderTarget[index + 3] = color.A();
   }
 
 

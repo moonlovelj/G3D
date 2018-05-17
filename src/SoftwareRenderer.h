@@ -21,6 +21,9 @@ namespace g3dcommon
     // Draw content.
     void Render();
 
+    // Rasterize a point.
+    void RasterizePoint(float x, float y, Color color);
+
   private:
 
     // Render target memory location.

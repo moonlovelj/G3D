@@ -4,6 +4,7 @@
 #include "Renderer.h"
 #include <SDL.h>
 #include <vector>
+#include <chrono>
 
 namespace g3dcommon
 {
@@ -54,6 +55,11 @@ namespace g3dcommon
 
     // User space renderer
     static Renderer* renderer;
+
+    // For compute fps.
+    static int fps;
+    static std::chrono::time_point<std::chrono::system_clock> sysLast;
+    static std::chrono::time_point<std::chrono::system_clock> sysCurr;
   };
 }
 

@@ -4,6 +4,9 @@ set(G3D_SOURCE_LIST
     main.cpp
     Camera.cpp
 	SoftwareRenderer.cpp
+	SceneObject.cpp
+	Scene.cpp
+	TriangleMesh.cpp
 )
 
 #-------------------------------------------------------------------------------

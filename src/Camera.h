@@ -17,6 +17,13 @@ namespace g3dcommon
 
     ~Camera();
 
+    // Project the position in the camera space to the position on the viewing plane.
+    Vector3D ProjectToView(const Vector3D& v);
+
+    // Convert the position on the viewing plane to the position on the screen.
+    // v must be the return value of the ProjectToView function.
+    Vector3D ConvertViewToScreen(const Vector3D& v);
+
   private:
     // Horizontal and vertical field of view.
     float hFov, vFov;
@@ -32,6 +39,9 @@ namespace g3dcommon
     float screenDist;
     // World-to-camera matrix.
     Matrix4x4 w2c;
+    // Directx style projection matrix, x and y are formatted between - 1 and 1,
+    // z is formatted between 0 and 1.
+    Matrix4x4 projectionMatrix;
 
 
   };

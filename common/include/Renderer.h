@@ -5,6 +5,7 @@
 
 namespace g3dcommon
 {
+  class Color;
 
   /**
    * Abstract renderer definition.
@@ -56,6 +57,15 @@ namespace g3dcommon
     */
     virtual void SetRenderTarget(unsigned char* target, size_t width, size_t height) = 0;
 
+    /**
+    * Rasterize a point.
+    */
+    virtual void Rasterize2DPoint(float x, float y, Color color) = 0;
+
+    /**
+    * Rasterize a line.
+    */
+    virtual void Rasterize2DLine(float x0, float y0, float x1, float y1, Color color) = 0;
 
     /**
      * Respond to cursor events.
@@ -116,16 +126,6 @@ namespace g3dcommon
      * \codepoint Unicode code for character input by the user.
      */
     virtual void CharEvent(unsigned int codepoint) { }
-
-    /**
-     * Internal -
-     * The viewer will tell the renderer if the screen is in HDPI mode.
-     */
-    void useHdpiRenederTarget() { useHdpi = true; }
-
-  protected:
-    // If the render target is using HIDPI.
-    bool useHdpi; 
 
   };
 

@@ -18,7 +18,7 @@ namespace g3dcommon
 
     aspectRatio = static_cast<float>(screenWidth) / screenHeight;
 
-    screenDist = 0.5f * screenWidth / tan(Radians(hFov)*0.5f);
+    screenDist = 0.5f * 2 / tan(Radians(hFov)*0.5f);
     vFov = Degrees(2.f * atan(tan(Radians(hFov)*0.5f) / aspectRatio));
 
     // Camera z axis.
@@ -34,6 +34,13 @@ namespace g3dcommon
                     right.y,              upNew.y,              dir.y,              0,
                     right.z,              upNew.z,              dir.z,              0,
                     Dot(transW2C, right), Dot(transW2C, upNew), Dot(transW2C, dir), 1);
+
+    
+    projectionMatrix(0, 0) = screenDist;
+    projectionMatrix(1, 1) = screenDist*aspectRatio;
+    projectionMatrix(2, 2) = fClip / (fClip - nClip);
+    projectionMatrix(3, 2) = nClip*fClip / (nClip - fClip);
+    projectionMatrix(2, 3) = 1.f;
   }
 
   Camera::Camera(const Camera& c)
@@ -54,6 +61,19 @@ namespace g3dcommon
   Camera::~Camera()
   {
 
+  }
+
+  g3dcommon::Vector3D Camera::ProjectToView(const Vector3D& v)
+  {
+    Vector4D vw(v.x, v.y, v.z, 1.f);
+    return (vw * projectionMatrix).ProjectTo3D();
+  }
+
+  g3dcommon::Vector3D Camera::ConvertViewToScreen(const Vector3D& v)
+  {
+    float x = (v.x + 1.f) * 0.5f * (screenWidth - 1.f);
+    float y = (v.y + 1.f) * 0.5f * (screenHeight - 1.f);
+    return Vector3D(x, y, v.z);
   }
 
 }

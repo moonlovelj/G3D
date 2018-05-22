@@ -4,7 +4,7 @@
 #include "Camera.h"
 #include "Renderer.h"
 #include "SceneObject.h"
-#include <list>
+#include <map>
 
 namespace g3dcommon
 {
@@ -13,9 +13,16 @@ namespace g3dcommon
  public:
    Scene();
    ~Scene();
- 
+    
+   // To render the scene.
+   void Render(Renderer* renderer);
+
  private:
 
+   // List of objects in the scene.
+   std::map<size_t, SceneObject*> sceneObjects;
+   // Camera in the scene.
+   Camera* camera;
  };
 }
 

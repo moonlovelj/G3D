@@ -5,6 +5,8 @@
 
 namespace g3dcommon
 {
+  class Renderer;
+
   /**
   * Vertex data structure.
   */
@@ -33,9 +35,15 @@ namespace g3dcommon
     virtual ~SceneObject();
 
     // Scene object rendering function.
-    virtual void Render() = 0;
-
+    virtual void Render(Renderer* renderer) = 0;
+    // Return index of the object.
+    const size_t& Index() const { return index; }
    protected:
+     // Index of the object.
+     static size_t kSceneObjectIndex;
+     size_t index;
+
+     // Visibility of the object.
      bool isVisible;
      // World-space position, rotation, scale.
      Vector3D position;

@@ -14,4 +14,20 @@ namespace g3dcommon
 
   }
 
+  void TriangleMesh::Load(const std::string& fileName)
+  {
+
+  }
+
+  void TriangleMesh::Render(Renderer* renderer)
+  {
+    if (nullptr == renderer)
+    {
+      return;
+    }
+
+  }
+
+ 
+
 }

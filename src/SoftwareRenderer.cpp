@@ -1,11 +1,14 @@
 #include "SoftwareRenderer.h"
+#include "Scene.h"
 #include <iostream>
+
 
 namespace g3dcommon
 {
 
   SoftwareRenderer::SoftwareRenderer() :
-    renderTarget(nullptr)
+    renderTarget(nullptr),
+    scene(nullptr)
   {
 
   }
@@ -34,18 +37,17 @@ namespace g3dcommon
 
   void SoftwareRenderer::Render()
   {
-    for (int i = 100; i < 400;i++)
+    if (NULL != scene)
     {
-      RasterizePoint(i, 100, Color(1.f, 0.f, 0.f, 1.f));
+      scene->Render(this);
     }
-    
   }
 
-  void SoftwareRenderer::RasterizePoint(float x, float y, Color color)
+  void SoftwareRenderer::Rasterize2DPoint(float x, float y, Color color)
   {
     int sx = static_cast<int>(floor(x));
     int sy = static_cast<int>(floor(y));
-    if (sx < 0 || sx >= targetWidth || sy < 0 || sy >= targetHeight)
+    if (sx < 0 || sx >= static_cast<int>(targetWidth) || sy < 0 || sy >= static_cast<int>(targetHeight))
     {
       return;
     }
@@ -54,6 +56,11 @@ namespace g3dcommon
     renderTarget[index + 1] = color.G();
     renderTarget[index + 2] = color.B();
     renderTarget[index + 3] = color.A();
+  }
+
+  void SoftwareRenderer::Rasterize2DLine(float x0, float y0, float x1, float y1, Color color)
+  {
+
   }
 
 

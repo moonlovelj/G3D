@@ -6,6 +6,8 @@
 
 namespace g3dcommon
 {
+  class Scene;
+
   class SoftwareRenderer : public Renderer
   {
   public:
@@ -20,9 +22,13 @@ namespace g3dcommon
     void Resize(size_t w, size_t h);
     // Draw content.
     void Render();
+    // Set the scene to be rendered.
+    void SetRenderScene(Scene* s) { scene = s; }
 
     // Rasterize a point.
-    void RasterizePoint(float x, float y, Color color);
+    void Rasterize2DPoint(float x, float y, Color color);
+    // Rasterize a line.
+    void Rasterize2DLine(float x0, float y0, float x1, float y1, Color color);
 
   private:
 
@@ -30,6 +36,8 @@ namespace g3dcommon
     unsigned char* renderTarget;
     // Render target width and height.
     size_t targetWidth, targetHeight;
+    // The scene to be rendered.
+    Scene* scene;
   };
 }
 

@@ -23,7 +23,7 @@ namespace g3dcommon
     // TriangleMesh rendering function.
     void Render(Renderer* renderer);
 
-  private:
+ 
     // Vertex list.
     std::list<Vertex> vertexList;
     // Triangle list.

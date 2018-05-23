@@ -1,4 +1,5 @@
 #include "TriangleMesh.h"
+#include "SoftwareRenderer.h"
 
 namespace g3dcommon
 {
@@ -25,7 +26,10 @@ namespace g3dcommon
     {
       return;
     }
-
+    for (auto & triangle : triangleList)
+    {
+      dynamic_cast<SoftwareRenderer*>(renderer)->DrawTriangle(triangle);
+    }
   }
 
  

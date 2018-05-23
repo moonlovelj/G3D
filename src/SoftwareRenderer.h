@@ -8,6 +8,7 @@
 namespace g3dcommon
 {
   class Scene;
+  struct Triangle;
 
   class SoftwareRenderer : public Renderer
   {
@@ -30,6 +31,8 @@ namespace g3dcommon
     void Rasterize2DPoint(float x, float y, Color color);
     // Rasterize a line.
     void Rasterize2DLine(float x0, float y0, float x1, float y1, Color color);
+
+    void DrawTriangle(const Triangle& triangle);
 
   private:
 

@@ -3,6 +3,7 @@
 #include <iostream>
 
 
+
 namespace g3dcommon
 {
 
@@ -21,7 +22,7 @@ namespace g3dcommon
 
   void SoftwareRenderer::Init()
   {
-    camera = new Camera(Vector3D(2, 3, -5), Vector3D(0, 0, 0), Vector3D(0, 1, 0), 90, 1, 1000, targetWidth, targetHeight);
+    camera = new Camera(Vector3D(0,0,-2), Vector3D(2, 2, 0), Vector3D(0, 1, 0), 90, 1, 1000, targetWidth, targetHeight);
   }
 
   void SoftwareRenderer::SetRenderTarget(unsigned char* target, size_t width, size_t height)
@@ -44,6 +45,7 @@ namespace g3dcommon
       scene->Render(this);
     }
 
+    return;
     Vector3D v[8];
     v[0] = Vector3D(-1,-1,-1);
     v[1] = Vector3D(-1, 1, -1);
@@ -94,8 +96,8 @@ namespace g3dcommon
 
   void SoftwareRenderer::Rasterize2DPoint(float x, float y, Color color)
   {
-    int sx = static_cast<int>(floor(x));
-    int sy = static_cast<int>(floor(targetHeight - 1 - y));
+    int sx = static_cast<int>(floor(x + 0.5f));
+    int sy = static_cast<int>(floor(targetHeight - 1 - y + 0.5f));
     if (sx < 0 || sx >= static_cast<int>(targetWidth) || sy < 0 || sy >= static_cast<int>(targetHeight))
     {
       return;
@@ -109,10 +111,10 @@ namespace g3dcommon
 
   void SoftwareRenderer::Rasterize2DLine(float x0, float y0, float x1, float y1, Color color)
   {
-    int xStart = static_cast<int>(x0);
-    int yStart = static_cast<int>(y0);
-    int xEnd = static_cast<int>(x1);
-    int yEnd = static_cast<int>(y1);
+    int xStart = static_cast<int>(x0 + 0.5f);
+    int yStart = static_cast<int>(y0 + 0.5f);
+    int xEnd = static_cast<int>(x1 + 0.5f);
+    int yEnd = static_cast<int>(y1 + 0.5f);
 
     bool steep = abs(yEnd - yStart) > abs(xEnd - xStart);
     if (steep)
@@ -185,5 +187,15 @@ namespace g3dcommon
     }
   }
 
+  void SoftwareRenderer::DrawTriangle(const Triangle& triangle)
+  {
+    Vector3D v0 = camera->ConvertViewToScreen(camera->ProjectToView(camera->ConvertWorldToCamera(triangle.vertices[0].position)));
+    Vector3D v1 = camera->ConvertViewToScreen(camera->ProjectToView(camera->ConvertWorldToCamera(triangle.vertices[1].position)));
+    Vector3D v2 = camera->ConvertViewToScreen(camera->ProjectToView(camera->ConvertWorldToCamera(triangle.vertices[2].position)));
+    Rasterize2DLine(v0.x, v0.y, v1.x, v1.y, Color(0.f, 1.f, 0.f, 1.f));
+    Rasterize2DLine(v0.x, v0.y, v2.x, v2.y, Color(0.f, 1.f, 0.f, 1.f));
+    Rasterize2DLine(v2.x, v2.y, v1.x, v1.y, Color(0.f, 1.f, 0.f, 1.f));
+
+  }
 
 }

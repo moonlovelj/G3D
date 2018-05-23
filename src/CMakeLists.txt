@@ -15,6 +15,7 @@ set(G3D_SOURCE_LIST
 include_directories(
   ${SDL_INCLUDE_DIRS}
   ${COMMON_INCLUDE_DIRS}
+  ${TINYOBJ_INCLUDE_DIRS}
 )
 
 #-------------------------------------------------------------------------------

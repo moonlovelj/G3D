@@ -18,6 +18,7 @@ set(COMMON_INCLUDE_DIRS ${COMMON_SOURCE_DIR}/include CACHE PATH "" FORCE)
 # Add subdirectories
 #-------------------------------------------------------------------------------
 add_subdirectory(${COMMON_SOURCE_DIR}/deps/SDL2-2.0.8)
+add_subdirectory(${COMMON_SOURCE_DIR}/deps/Tinyobjloader)
 
 #-------------------------------------------------------------------------------
 # Set include directories

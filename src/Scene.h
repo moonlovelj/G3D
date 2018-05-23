@@ -21,8 +21,6 @@ namespace g3dcommon
 
    // List of objects in the scene.
    std::map<size_t, SceneObject*> sceneObjects;
-   // Camera in the scene.
-   Camera* camera;
  };
 }
 

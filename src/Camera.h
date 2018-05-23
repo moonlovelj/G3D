@@ -17,6 +17,9 @@ namespace g3dcommon
 
     ~Camera();
 
+    // Convert the position in the world space to the position int the camera space.
+    Vector3D ConvertWorldToCamera(const Vector3D& v);
+
     // Project the position in the camera space to the position on the viewing plane.
     Vector3D ProjectToView(const Vector3D& v);
 

@@ -3,6 +3,7 @@
 
 #include "Renderer.h"
 #include "Color.h"
+#include "Camera.h"
 
 namespace g3dcommon
 {
@@ -38,6 +39,8 @@ namespace g3dcommon
     size_t targetWidth, targetHeight;
     // The scene to be rendered.
     Scene* scene;
+    // The camera to be used.
+    Camera* camera;
   };
 }
 

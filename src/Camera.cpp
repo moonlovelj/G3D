@@ -63,6 +63,11 @@ namespace g3dcommon
 
   }
 
+  g3dcommon::Vector3D Camera::ConvertWorldToCamera(const Vector3D& v)
+  {
+    return (Vector4D(v.x, v.y, v.z, 1)*w2c).ProjectTo3D();
+  }
+
   g3dcommon::Vector3D Camera::ProjectToView(const Vector3D& v)
   {
     Vector4D vw(v.x, v.y, v.z, 1.f);
@@ -76,4 +81,5 @@ namespace g3dcommon
     return Vector3D(x, y, v.z);
   }
 
+  
 }

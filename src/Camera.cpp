@@ -63,23 +63,126 @@ namespace g3dcommon
 
   }
 
-  g3dcommon::Vector3D Camera::ConvertWorldToCamera(const Vector3D& v)
+  Vector3D Camera::ConvertWorldToCamera(const Vector3D& v)
   {
     return (Vector4D(v.x, v.y, v.z, 1)*w2c).ProjectTo3D();
   }
 
-  g3dcommon::Vector3D Camera::ProjectToView(const Vector3D& v)
+  Vector3D Camera::ProjectToView(const Vector3D& v)
   {
     Vector4D vw(v.x, v.y, v.z, 1.f);
     return (vw * projectionMatrix).ProjectTo3D();
   }
 
-  g3dcommon::Vector3D Camera::ConvertViewToScreen(const Vector3D& v)
+  Vector3D Camera::ConvertViewToScreen(const Vector3D& v)
   {
     float x = (v.x + 1.f) * 0.5f * (screenWidth - 1.f);
     float y = (v.y + 1.f) * 0.5f * (screenHeight - 1.f);
     return Vector3D(x, y, v.z);
   }
+
+  void Camera::SetFov(float fov)
+  {
+    hFov = fov;
+    screenDist = 0.5f * 2 / tan(Radians(hFov)*0.5f);
+    vFov = Degrees(2.f * atan(tan(Radians(hFov)*0.5f) / aspectRatio));
+    projectionMatrix(0, 0) = screenDist;
+    projectionMatrix(1, 1) = screenDist*aspectRatio;
+  }
+
+  void Camera::SetNearClip(float nClip)
+  {
+    this->nClip = nClip;
+    projectionMatrix(2, 2) = fClip / (fClip - nClip);
+    projectionMatrix(3, 2) = nClip*fClip / (nClip - fClip);
+  }
+
+  void Camera::SetFarClip(float fClip)
+  {
+    this->fClip = fClip;
+    projectionMatrix(2, 2) = fClip / (fClip - nClip);
+    projectionMatrix(3, 2) = nClip*fClip / (nClip - fClip);
+  }
+
+  void Camera::SetScreenSize(size_t width, size_t height)
+  {
+    screenWidth = width;
+    screenHeight = height;
+    aspectRatio = static_cast<float>(screenWidth) / screenHeight;
+    vFov = Degrees(2.f * atan(tan(Radians(hFov)*0.5f) / aspectRatio));
+    projectionMatrix(1, 1) = screenDist*aspectRatio;
+  }
+
+  void Camera::SetPosition(const Vector3D& position)
+  {
+    pos = position;
+
+    Vector3D up = Up();
+    // Camera z axis.
+    Vector3D dir = (targetPos - pos).Unit();
+    // Camera x axis.
+    Vector3D right = Cross(up, dir).Unit();
+    // Camera y axis.
+    Vector3D upNew = Cross(dir, right);
+    // World-to-camera translation.
+    Vector3D transW2C(-pos);
+
+    w2c(0, 0) = right.x;              w2c(0, 1) = upNew.x;              w2c(0, 2) = dir.x;
+    w2c(1, 0) = right.y;              w2c(1, 1) = upNew.y;              w2c(1, 2) = dir.y;
+    w2c(2, 0) = right.z;              w2c(2, 1) = upNew.z;              w2c(2, 2) = dir.z;
+    w2c(3, 0) = Dot(transW2C, right); w2c(3, 1) = Dot(transW2C, upNew); w2c(3, 2) = Dot(transW2C, dir);
+
+  }
+
+  void Camera::SetTargetPosition(const Vector3D& lookAt)
+  {
+    targetPos = lookAt;
+
+    Vector3D up = Up();
+    // Camera z axis.
+    Vector3D dir = (targetPos - pos).Unit();
+    // Camera x axis.
+    Vector3D right = Cross(up, dir).Unit();
+    // Camera y axis.
+    Vector3D upNew = Cross(dir, right);
+    // World-to-camera translation.
+    Vector3D transW2C(-pos);
+
+    w2c(0, 0) = right.x;              w2c(0, 1) = upNew.x;              w2c(0, 2) = dir.x;
+    w2c(1, 0) = right.y;              w2c(1, 1) = upNew.y;              w2c(1, 2) = dir.y;
+    w2c(2, 0) = right.z;              w2c(2, 1) = upNew.z;              w2c(2, 2) = dir.z;
+    w2c(3, 0) = Dot(transW2C, right); w2c(3, 1) = Dot(transW2C, upNew); w2c(3, 2) = Dot(transW2C, dir);
+  }
+
+  Vector3D Camera::Up() const
+  {
+    return Vector3D(w2c(0, 1), w2c(1, 1), w2c(2, 1));
+  }
+
+  Vector3D Camera::Dir() const
+  {
+    return Vector3D(w2c(0, 2), w2c(1, 2), w2c(2, 2));
+  }
+
+  Vector3D Camera::Right() const
+  {
+    return Vector3D(w2c(0, 0), w2c(1, 0), w2c(2, 0));
+  }
+
+  void Camera::MoveForward(float dist)
+  {
+    Vector3D up = Up();
+    Vector3D dir = Dir();
+    Vector3D right = Right();
+    Vector3D moveVector = dir * dist;
+    targetPos += moveVector;
+    pos += moveVector;
+    // World-to-camera translation.
+    Vector3D transW2C(-pos);
+    w2c(3, 0) = Dot(transW2C, right); w2c(3, 1) = Dot(transW2C, up); w2c(3, 2) = Dot(transW2C, dir);
+  }
+
+  
 
   
 }

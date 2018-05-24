@@ -27,6 +27,38 @@ namespace g3dcommon
     // v must be the return value of the ProjectToView function.
     Vector3D ConvertViewToScreen(const Vector3D& v);
 
+    // Set horizontal field of view.
+    void SetFov(float fov);
+    // Returns the value of horizontal field of view.
+    const float& GetFov() const { return hFov; }
+    // Set near clipping plane.
+    void SetNearClip(float nClip);
+    // Returns the value of near clipping plane.
+    const float& GetNearClip() const { return nClip; }
+    // Set far clipping plane.
+    void SetFarClip(float fClip);
+    // Returns the value of far clipping plane.
+    const float& GetFarClip() const { return fClip; }
+    // Set screen size.
+    void SetScreenSize(size_t width, size_t height);
+    // Set position of eye.
+    void SetPosition(const Vector3D& position);
+    // Returns the position of eye.
+    const Vector3D& GetPosition() const { return pos; }
+    // Set target position.
+    void SetTargetPosition(const Vector3D& lookAt);
+    // Returns target position.
+    const Vector3D& GetTargetPosition() const { return targetPos; }
+    // Returns up vector.
+    Vector3D Up() const;
+    // Returns dir vector.
+    Vector3D Dir() const;
+    // Returns right vector.
+    Vector3D Right() const;
+
+    // Move the dist distance along the viewing axis.
+    void MoveForward(float dist);
+
   private:
     // Horizontal and vertical field of view.
     float hFov, vFov;

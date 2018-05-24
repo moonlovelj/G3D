@@ -44,6 +44,10 @@ namespace g3dcommon
     {
       scene->Render(this);
     }
+    if (camera)
+    {
+      camera->MoveForward(0.01f);
+    }
 
     return;
     Vector3D v[8];

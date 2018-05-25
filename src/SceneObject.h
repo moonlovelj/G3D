@@ -8,24 +8,6 @@ namespace g3dcommon
   class Renderer;
 
   /**
-  * Vertex data structure.
-  */
-  struct Vertex
-  {
-    // Position of vertex.
-    Vector3D position;
-  };
-
-  /**
-  * Triangle data structure.
-  */
-  struct Triangle
-  {
-    // Three vertices of triangle.
-    Vertex vertices[3];
-  };
-
-  /**
   * The base class of objects in the scene.
   */
   class SceneObject

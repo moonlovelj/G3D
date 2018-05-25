@@ -1,11 +1,39 @@
 #ifndef __RENDERER_H__
 #define __RENDERER_H__
 
+#include "Vector3D.h"
 #include <string>
+#include <vector>
+
 
 namespace g3dcommon
 {
   class Color;
+
+  /**
+  * Vertex data structure.
+  */
+  struct Vertex
+  {
+    // Position of vertex.
+    Vector3D position;
+  };
+
+  /**
+  * Triangle data structure.
+  */
+  struct Triangle
+  {
+    // Three vertices of triangle.
+    Vertex vertices[3];
+  };
+
+  enum EPrimitiveType
+  {
+    EPoint,
+    ELine,
+    ETriangle
+  };
 
   /**
    * Abstract renderer definition.
@@ -66,6 +94,11 @@ namespace g3dcommon
     * Rasterize a line.
     */
     virtual void Rasterize2DLine(float x0, float y0, float x1, float y1, Color color) = 0;
+
+    /**
+    * Draw primitives from vertex arrays and index arrays.
+    */
+    virtual void DrawPrimitive(const std::vector<Vertex>& vertices, const std::vector<size_t>& indexs, size_t primitiveNum, EPrimitiveType primitiveType) = 0;
 
     /**
      * Respond to cursor events.

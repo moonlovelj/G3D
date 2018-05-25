@@ -58,6 +58,8 @@ namespace g3dcommon
 
     // Move the dist distance along the viewing axis.
     void MoveForward(float dist);
+    // Move along v.
+    void Move(const Vector3D& v);
 
   private:
     // Horizontal and vertical field of view.

@@ -2,7 +2,7 @@
 #define __TRIANGLEMESH_H__
 
 #include "SceneObject.h"
-#include <list>
+#include <vector>
 
 namespace g3dcommon
 {
@@ -19,15 +19,17 @@ namespace g3dcommon
     ~TriangleMesh();
 
     // Load a triangle mesh from file.
-    void Load(const std::string& fileName);
+    void Load(const std::string& objName);
     // TriangleMesh rendering function.
     void Render(Renderer* renderer);
 
- 
-    // Vertex list.
-    std::list<Vertex> vertexList;
-    // Triangle list.
-    std::list<Triangle> triangleList;
+  private:
+    // Vertex vector.
+    std::vector<Vertex> vertices;
+    // Triangle vector.
+    std::vector<Triangle> triangles;
+    // Index vector.
+    std::vector<size_t> indexs;
   };
 }
 

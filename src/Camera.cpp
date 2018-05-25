@@ -182,6 +182,18 @@ namespace g3dcommon
     w2c(3, 0) = Dot(transW2C, right); w2c(3, 1) = Dot(transW2C, up); w2c(3, 2) = Dot(transW2C, dir);
   }
 
+  void Camera::Move(const Vector3D& v)
+  {
+    Vector3D up = Up();
+    Vector3D dir = Dir();
+    Vector3D right = Right();
+    targetPos += v;
+    pos += v;
+    // World-to-camera translation.
+    Vector3D transW2C(-pos);
+    w2c(3, 0) = Dot(transW2C, right); w2c(3, 1) = Dot(transW2C, up); w2c(3, 2) = Dot(transW2C, dir);
+  }
+
   
 
   

@@ -89,15 +89,11 @@ namespace g3dcommon
       {
         bQuit = true;
       }
-      else if (sdlEvent.type == SDL_KEYDOWN)
+      else if (sdlEvent.type == SDL_KEYDOWN || sdlEvent.type == SDL_KEYUP)
       {
-        switch (sdlEvent.key.keysym.sym)
+        if (nullptr != renderer)
         {
-        case SDLK_ESCAPE:
-          bQuit = true;
-          break;
-        default:
-          break;
+          renderer->KeyboardEvent(sdlEvent.key.keysym.sym, sdlEvent.type, 0);
         }
       }
     }

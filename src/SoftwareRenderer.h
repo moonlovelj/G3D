@@ -31,8 +31,11 @@ namespace g3dcommon
     void Rasterize2DPoint(float x, float y, Color color);
     // Rasterize a line.
     void Rasterize2DLine(float x0, float y0, float x1, float y1, Color color);
+    // Draw primitives.
+    void DrawPrimitive(const std::vector<Vertex>& vertices, const std::vector<size_t>& indexs, size_t primitiveNum, EPrimitiveType primitiveType);
 
-    void DrawTriangle(const Triangle& triangle);
+    // Keyboard event callback.
+    void KeyboardEvent(int key, int event, unsigned char mods);
 
   private:
 

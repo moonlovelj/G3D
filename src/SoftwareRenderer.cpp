@@ -1,11 +1,14 @@
 #include "SoftwareRenderer.h"
 #include "Scene.h"
+#include "Common.h"
 #include <iostream>
 
 
 
 namespace g3dcommon
 {
+
+  static const Color red(1.f,0.f,0.f,1.f);
 
   SoftwareRenderer::SoftwareRenderer() :
     renderTarget(nullptr),
@@ -46,56 +49,8 @@ namespace g3dcommon
     }
     if (camera)
     {
-      camera->MoveForward(0.01f);
+      //camera->MoveForward(0.01f);
     }
-
-    return;
-    Vector3D v[8];
-    v[0] = Vector3D(-1,-1,-1);
-    v[1] = Vector3D(-1, 1, -1);
-    v[2] = Vector3D(1, 1, -1);
-    v[3] = Vector3D(1, -1, -1);
-    v[4] = Vector3D(1, -1, 1);
-    v[5] = Vector3D(1, 1, 1);
-    v[6] = Vector3D(-1, 1, 1);
-    v[7] = Vector3D(-1, -1, 1);
-    
-    Vector3D vp[8];
-    vp[0] = camera->ConvertViewToScreen(camera->ProjectToView(camera->ConvertWorldToCamera(v[0])));
-    vp[1] = camera->ConvertViewToScreen(camera->ProjectToView(camera->ConvertWorldToCamera(v[1])));
-    vp[2] = camera->ConvertViewToScreen(camera->ProjectToView(camera->ConvertWorldToCamera(v[2])));
-    vp[3] = camera->ConvertViewToScreen(camera->ProjectToView(camera->ConvertWorldToCamera(v[3])));
-    vp[4] = camera->ConvertViewToScreen(camera->ProjectToView(camera->ConvertWorldToCamera(v[4])));
-    vp[5] = camera->ConvertViewToScreen(camera->ProjectToView(camera->ConvertWorldToCamera(v[5])));
-    vp[6] = camera->ConvertViewToScreen(camera->ProjectToView(camera->ConvertWorldToCamera(v[6])));
-    vp[7] = camera->ConvertViewToScreen(camera->ProjectToView(camera->ConvertWorldToCamera(v[7])));
-
-    Rasterize2DLine(vp[0].x, vp[0].y, vp[1].x, vp[1].y, Color(0.f, 1.f, 0.f, 1.f));
-    Rasterize2DLine(vp[1].x, vp[1].y, vp[2].x, vp[2].y, Color(0.f, 1.f, 0.f, 1.f));
-    Rasterize2DLine(vp[0].x, vp[0].y, vp[2].x, vp[2].y, Color(0.f, 1.f, 0.f, 1.f));
-    Rasterize2DLine(vp[0].x, vp[0].y, vp[3].x, vp[3].y, Color(0.f, 1.f, 0.f, 1.f));
-    Rasterize2DLine(vp[2].x, vp[2].y, vp[3].x, vp[3].y, Color(0.f, 1.f, 0.f, 1.f));
-
-    Rasterize2DLine(vp[4].x, vp[4].y, vp[5].x, vp[5].y, Color(0.f, 1.f, 0.f, 1.f));
-    Rasterize2DLine(vp[4].x, vp[4].y, vp[7].x, vp[7].y, Color(0.f, 1.f, 0.f, 1.f));
-    Rasterize2DLine(vp[5].x, vp[5].y, vp[6].x, vp[6].y, Color(0.f, 1.f, 0.f, 1.f));
-    Rasterize2DLine(vp[6].x, vp[6].y, vp[7].x, vp[7].y, Color(0.f, 1.f, 0.f, 1.f));
-    Rasterize2DLine(vp[5].x, vp[5].y, vp[7].x, vp[7].y, Color(0.f, 1.f, 0.f, 1.f));
-
-    Rasterize2DLine(vp[0].x, vp[0].y, vp[1].x, vp[1].y, Color(0.f, 1.f, 0.f, 1.f));
-    Rasterize2DLine(vp[0].x, vp[0].y, vp[7].x, vp[7].y, Color(0.f, 1.f, 0.f, 1.f));
-    Rasterize2DLine(vp[1].x, vp[1].y, vp[6].x, vp[6].y, Color(0.f, 1.f, 0.f, 1.f));
-    Rasterize2DLine(vp[6].x, vp[6].y, vp[7].x, vp[7].y, Color(0.f, 1.f, 0.f, 1.f));
-    Rasterize2DLine(vp[0].x, vp[0].y, vp[6].x, vp[6].y, Color(0.f, 1.f, 0.f, 1.f));
-
-    Rasterize2DLine(vp[2].x, vp[2].y, vp[3].x, vp[3].y, Color(0.f, 1.f, 0.f, 1.f));
-    Rasterize2DLine(vp[2].x, vp[2].y, vp[5].x, vp[5].y, Color(0.f, 1.f, 0.f, 1.f));
-    Rasterize2DLine(vp[4].x, vp[4].y, vp[3].x, vp[3].y, Color(0.f, 1.f, 0.f, 1.f));
-    Rasterize2DLine(vp[4].x, vp[4].y, vp[5].x, vp[5].y, Color(0.f, 1.f, 0.f, 1.f));
-    Rasterize2DLine(vp[3].x, vp[3].y, vp[5].x, vp[5].y, Color(0.f, 1.f, 0.f, 1.f));
-
-    Rasterize2DLine(vp[2].x, vp[2].y, vp[6].x, vp[6].y, Color(0.f, 1.f, 0.f, 1.f));
-    Rasterize2DLine(vp[7].x, vp[7].y, vp[3].x, vp[3].y, Color(0.f, 1.f, 0.f, 1.f));
   }
 
   void SoftwareRenderer::Rasterize2DPoint(float x, float y, Color color)
@@ -137,7 +92,7 @@ namespace g3dcommon
     {
       while (y <= yEnd)
       {
-        Rasterize2DPoint(x, y, color);
+        Rasterize2DPoint(static_cast<float>(x), static_cast<float>(y), color);
         y++;
       }
     }
@@ -154,11 +109,11 @@ namespace g3dcommon
       {
         if (steep)
         {
-          Rasterize2DPoint(y, x, color);
+          Rasterize2DPoint(static_cast<float>(y), static_cast<float>(x), color);
         }
         else
         {
-          Rasterize2DPoint(x, y, color);
+          Rasterize2DPoint(static_cast<float>(x), static_cast<float>(y), color);
         }
 
         x++;
@@ -191,15 +146,71 @@ namespace g3dcommon
     }
   }
 
-  void SoftwareRenderer::DrawTriangle(const Triangle& triangle)
+  void SoftwareRenderer::DrawPrimitive(const std::vector<Vertex>& vertices, const std::vector<size_t>& indexs, size_t primitiveNum, EPrimitiveType primitiveType)
   {
-    Vector3D v0 = camera->ConvertViewToScreen(camera->ProjectToView(camera->ConvertWorldToCamera(triangle.vertices[0].position)));
-    Vector3D v1 = camera->ConvertViewToScreen(camera->ProjectToView(camera->ConvertWorldToCamera(triangle.vertices[1].position)));
-    Vector3D v2 = camera->ConvertViewToScreen(camera->ProjectToView(camera->ConvertWorldToCamera(triangle.vertices[2].position)));
-    Rasterize2DLine(v0.x, v0.y, v1.x, v1.y, Color(0.f, 1.f, 0.f, 1.f));
-    Rasterize2DLine(v0.x, v0.y, v2.x, v2.y, Color(0.f, 1.f, 0.f, 1.f));
-    Rasterize2DLine(v2.x, v2.y, v1.x, v1.y, Color(0.f, 1.f, 0.f, 1.f));
+    switch (primitiveType)
+    {
+    case g3dcommon::EPoint:
+      break;
+    case g3dcommon::ELine:
+      break;
+    case g3dcommon::ETriangle:
+      for (size_t i = 0; i < primitiveNum; i++)
+      {
+        size_t index0 = indexs[i * 3 + 0];
+        size_t index1 = indexs[i * 3 + 1];
+        size_t index2 = indexs[i * 3 + 2];
+        Vertex vertex0 = vertices[index0];
+        Vertex vertex1 = vertices[index1];
+        Vertex vertex2 = vertices[index2];
+        Vector3D v0 = camera->ConvertViewToScreen(camera->ProjectToView(camera->ConvertWorldToCamera(vertex0.position)));
+        Vector3D v1 = camera->ConvertViewToScreen(camera->ProjectToView(camera->ConvertWorldToCamera(vertex1.position)));
+        Vector3D v2 = camera->ConvertViewToScreen(camera->ProjectToView(camera->ConvertWorldToCamera(vertex2.position)));
+        Rasterize2DLine(v0.x, v0.y, v1.x, v1.y, red);
+        Rasterize2DLine(v0.x, v0.y, v2.x, v2.y, red);
+        Rasterize2DLine(v2.x, v2.y, v1.x, v1.y, red);
+      }
+      break;
+    default:
+      break;
+    }
+  }
 
+  void SoftwareRenderer::KeyboardEvent(int key, int event, unsigned char mods)
+  {
+    switch (key)
+    {
+    case G3D_KEY_w:
+      if (nullptr != camera)
+      {
+        Vector3D v = camera->Dir();
+        camera->Move(v*0.1f);
+      }
+      break;
+    case G3D_KEY_s:
+      if (nullptr != camera)
+      {
+        Vector3D v = camera->Dir();
+        camera->Move(-v*0.1f);
+      }
+      break;
+    case G3D_KEY_a:
+      if (nullptr != camera)
+      {
+        Vector3D v = camera->Right();
+        camera->Move(-v*0.1f);
+      }
+      break;
+    case G3D_KEY_d:
+      if (nullptr != camera)
+      {
+        Vector3D v = camera->Right();
+        camera->Move(v*0.1f);
+      }
+      break;
+    default:
+      break;
+    }
   }
 
 }

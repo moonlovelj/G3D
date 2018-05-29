@@ -93,9 +93,14 @@ namespace g3dcommon
     {
       return;
     }
+
+    const Matrix4x4& mt = GetTransformationMatrix();
+    for (auto& v : vertices)
+    {
+      v.transformedPosition = v.position * mt;
+    }
+
     renderer->DrawPrimitive(vertices, indexs, triangles.size(), ETriangle);
   }
-
- 
 
 }

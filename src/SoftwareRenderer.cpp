@@ -25,7 +25,7 @@ namespace g3dcommon
 
   void SoftwareRenderer::Init()
   {
-    camera = new Camera(Vector3D(0,0,-2), Vector3D(2, 2, 0), Vector3D(0, 1, 0), 90, 1, 1000, targetWidth, targetHeight);
+    camera = new Camera(Vector3D(0,3,-2), Vector3D(0, 0, 0), Vector3D(0, 1, 0), 90, 1, 1000, targetWidth, targetHeight);
   }
 
   void SoftwareRenderer::SetRenderTarget(unsigned char* target, size_t width, size_t height)
@@ -163,9 +163,9 @@ namespace g3dcommon
         Vertex vertex0 = vertices[index0];
         Vertex vertex1 = vertices[index1];
         Vertex vertex2 = vertices[index2];
-        Vector3D v0 = camera->ConvertViewToScreen(camera->ProjectToView(camera->ConvertWorldToCamera(vertex0.position)));
-        Vector3D v1 = camera->ConvertViewToScreen(camera->ProjectToView(camera->ConvertWorldToCamera(vertex1.position)));
-        Vector3D v2 = camera->ConvertViewToScreen(camera->ProjectToView(camera->ConvertWorldToCamera(vertex2.position)));
+        Vector3D v0 = camera->ConvertViewToScreen(camera->ProjectToView(camera->ConvertWorldToCamera(vertex0.transformedPosition)));
+        Vector3D v1 = camera->ConvertViewToScreen(camera->ProjectToView(camera->ConvertWorldToCamera(vertex1.transformedPosition)));
+        Vector3D v2 = camera->ConvertViewToScreen(camera->ProjectToView(camera->ConvertWorldToCamera(vertex2.transformedPosition)));
         Rasterize2DLine(v0.x, v0.y, v1.x, v1.y, red);
         Rasterize2DLine(v0.x, v0.y, v2.x, v2.y, red);
         Rasterize2DLine(v2.x, v2.y, v1.x, v1.y, red);

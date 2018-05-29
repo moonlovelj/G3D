@@ -17,6 +17,8 @@ namespace g3dcommon
   {
     // Position of vertex.
     Vector3D position;
+    // Transformed position.
+    Vector3D transformedPosition;
   };
 
   /**

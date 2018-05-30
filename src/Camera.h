@@ -63,8 +63,12 @@ namespace g3dcommon
     // Move along v.
     void Move(const Vector3D& v);
     // Reject culling based on their maximum radius,
-    // returns true if object is rejected.
+    // returns true if object is culled.
     bool CullObject(SceneObject* object) const;
+    // Back culling based on normal of face and any point on face,
+    // returns true if face is culled,
+    // parameter n does not need to be normalized.
+    bool CullFace(const Vector3D& n, const Vector3D& point) const;
 
   private:
     // Horizontal and vertical field of view.

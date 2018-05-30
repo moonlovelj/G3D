@@ -246,7 +246,10 @@ namespace g3dcommon
     return false;
   }
 
-  
-
+  bool Camera::CullFace(const Vector3D& n, const Vector3D& point) const
+  {
+    Vector3D view = pos - point;
+    return Dot(n, view) < 0.f;
+  }
   
 }

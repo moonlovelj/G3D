@@ -25,7 +25,7 @@ namespace g3dcommon
 
   void SoftwareRenderer::Init()
   {
-    camera = new Camera(Vector3D(0,0,-2), Vector3D(0, 0, 0), Vector3D(0, 1, 0), 90, 1, 1000, targetWidth, targetHeight);
+    camera = new Camera(Vector3D(2,0,-4), Vector3D(0, 0, 0), Vector3D(0, 1, 0), 90, 1, 1000, targetWidth, targetHeight);
     if (scene)
     {
       scene->SetCamera(camera);
@@ -167,6 +167,14 @@ namespace g3dcommon
         Vertex vertex0 = vertices[index0];
         Vertex vertex1 = vertices[index1];
         Vertex vertex2 = vertices[index2];
+
+        // back face culling.
+        Vector3D n = Cross(vertex1.transformedPosition - vertex0.transformedPosition, vertex2.transformedPosition - vertex0.transformedPosition);
+        if (camera->CullFace(n, vertex0.transformedPosition))
+        {
+          continue;
+        }
+
         Vector3D v0 = camera->ConvertViewToScreen(camera->ProjectToView(camera->ConvertWorldToCamera(vertex0.transformedPosition)));
         Vector3D v1 = camera->ConvertViewToScreen(camera->ProjectToView(camera->ConvertWorldToCamera(vertex1.transformedPosition)));
         Vector3D v2 = camera->ConvertViewToScreen(camera->ProjectToView(camera->ConvertWorldToCamera(vertex2.transformedPosition)));

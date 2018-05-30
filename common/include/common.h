@@ -1,9 +1,14 @@
 #ifndef __COMMON_H__
 #define __COMMON_H__
 
+#include "Vector3D.h"
+
 #include <cmath>
 #include <limits>
 #include <algorithm>
+
+namespace g3dcommon
+{
 
 #define PI    (3.14159265358979323)
 #define PI_F  (3.14159265358979f)
@@ -11,10 +16,10 @@
 #define INF_F (std::numeric_limits<float>::infinity())
 
 
-/* The unknown key */
+  /* The unknown key */
 #define G3D_KEY_UNKNOWN            -1
 
-/* Printable keys */
+  /* Printable keys */
 #define G3D_KEY_SPACE              32
 #define G3D_KEY_APOSTROPHE         39  /* ' */
 #define G3D_KEY_COMMA              44  /* , */
@@ -86,33 +91,50 @@
 #define G3D_KEY_y                  121
 #define G3D_KEY_z                  122
 
+  /*
+  * Takes any kind of number and converts from degrees to radians.
+  */
+  template<typename T>
+  inline T Radians(T deg)
+  {
+    return deg * (PI_F / 180);
+  }
 
-/*
-* Takes any kind of number and converts from degrees to radians.
-*/
-template<typename T>
-inline T Radians(T deg)
-{
-  return deg * (PI_F / 180);
-}
+  /*
+  * Takes any kind of number and converts from radians to degrees.
+  */
+  template<typename T>
+  inline T Degrees(T rad)
+  {
+    return rad * (180 / PI_F);
+  }
 
-/*
-* Takes any kind of number and converts from radians to degrees.
-*/
-template<typename T>
-inline T Degrees(T rad)
-{
-  return rad * (180 / PI_F);
-}
+  /*
+  * Takes any kind of number, as well as a lower and upper bound, and clamps the
+  * number to be within the bound.
+  */
+  template<typename T>
+  inline T Clamp(T x, T lo, T hi)
+  {
+    return std::min(std::max(x, lo), hi);
+  }
 
-/*
-* Takes any kind of number, as well as a lower and upper bound, and clamps the
-* number to be within the bound.
-*/
-template<typename T>
-inline T Clamp(T x, T lo, T hi) 
-{
-  return std::min(std::max(x, lo), hi);
+  /**
+  * Returns the distance from the plane to the point,
+  * the plane is defined in the form of dot(p,n)=d (
+  * p is any point on the plane, n is a normal of the
+  * plane and must be a unit vector).
+  *
+  * The return value is a signed distance. A positive
+  * number indicates the point on the front of the plane,
+  * a negative number indicates the point on the back of
+  * the plane, and 0 indicates the point on the plane.
+  */
+  inline float DistancePlaneToPoint(const Vector3D& n, const float d, const Vector3D& pos)
+  {
+    return Dot(pos, n) - d;
+  }
+
 }
 
 #endif

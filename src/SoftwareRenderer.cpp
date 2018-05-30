@@ -25,7 +25,11 @@ namespace g3dcommon
 
   void SoftwareRenderer::Init()
   {
-    camera = new Camera(Vector3D(0,3,-2), Vector3D(0, 0, 0), Vector3D(0, 1, 0), 90, 1, 1000, targetWidth, targetHeight);
+    camera = new Camera(Vector3D(0,0,-2), Vector3D(0, 0, 0), Vector3D(0, 1, 0), 90, 1, 1000, targetWidth, targetHeight);
+    if (scene)
+    {
+      scene->SetCamera(camera);
+    }
   }
 
   void SoftwareRenderer::SetRenderTarget(unsigned char* target, size_t width, size_t height)

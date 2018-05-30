@@ -7,6 +7,7 @@
 namespace g3dcommon
 {
   class Renderer;
+  class Camera;
 
   /**
   * The base class of objects in the scene.
@@ -41,6 +42,12 @@ namespace g3dcommon
     void SetVisible(bool bVisible) { isVisible = bVisible; }
     // Returns visibility of the scene object.
     bool IsVisible() const { return isVisible; }
+    // Returns the maximum radius of the object.
+    const float& GetMaxRadius() const { return maxRadius; }
+    // Set camera.
+    void SetCamera(Camera* camera) { this->camera = camera; }
+    // Returns camera.
+    Camera* GetCamera() { return camera; }
 
    protected:
      // Calculate model to world matrix and update m2w.
@@ -58,6 +65,10 @@ namespace g3dcommon
      Vector3D scale;
      // Model to world matrix.
      Matrix4x4 m2w;
+     // The maximum radius of the object.
+     float maxRadius;
+     // The camera used to render the object.
+     Camera* camera;
   };
 }
 

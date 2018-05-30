@@ -6,6 +6,8 @@
 
 namespace g3dcommon
 {
+  class SceneObject;
+
   class Camera
   {
   public:
@@ -60,6 +62,9 @@ namespace g3dcommon
     void MoveForward(float dist);
     // Move along v.
     void Move(const Vector3D& v);
+    // Reject culling based on their maximum radius,
+    // returns true if object is rejected.
+    bool CullObject(SceneObject* object) const;
 
   private:
     // Horizontal and vertical field of view.

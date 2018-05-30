@@ -8,7 +8,9 @@ namespace g3dcommon
   SceneObject::SceneObject() :
     position(0.f, 0.f, 0.f),
     rotation(0.f, 0.f, 0.f),
-    scale(1.f, 1.f, 1.f)
+    scale(1.f, 1.f, 1.f),
+    maxRadius(0.f),
+    camera(nullptr)
   {
     index = kSceneObjectIndex;
     ++kSceneObjectIndex;
@@ -35,6 +37,8 @@ namespace g3dcommon
   void SceneObject::SetScale(const Vector3D& s)
   {
     scale = s;
+    float maxs = std::max(std::max(scale.x, scale.y), scale.z);
+    maxRadius *= maxs;
     CalculateModelToWorldMatrix();
   }
 

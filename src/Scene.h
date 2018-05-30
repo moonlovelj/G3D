@@ -16,11 +16,16 @@ namespace g3dcommon
     
    // To render the scene.
    void Render(Renderer* renderer);
-
+   // Set camera.
+   void SetCamera(Camera* camera);
+   // Returns camera.
+   Camera* GetCamera() { return camera; }
  private:
 
    // List of objects in the scene.
    std::map<size_t, SceneObject*> sceneObjects;
+   // The camera used to render the scene.
+   Camera* camera;
  };
 }
 

@@ -8,7 +8,8 @@
 namespace g3dcommon
 {
 
-  Scene::Scene()
+  Scene::Scene():
+    camera(nullptr)
   {
     TriangleMesh* mesh = new TriangleMesh;
     mesh->Load("test.obj");
@@ -30,6 +31,15 @@ namespace g3dcommon
     for (auto object : sceneObjects)
     {
       object.second->Render(renderer);
+    }
+  }
+
+  void Scene::SetCamera(Camera* camera)
+  {
+    this->camera = camera;
+    for (auto object : sceneObjects)
+    {
+      object.second->SetCamera(camera);
     }
   }
 

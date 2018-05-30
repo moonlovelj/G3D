@@ -41,12 +41,19 @@ namespace g3dcommon
       return;
     }
 
+    maxRadius = 0.f;
     for (size_t i = 0; i < attrib.vertices.size(); i += 3)
     {
       Vertex vertex;
       vertex.position = Vector3D(attrib.vertices[i], attrib.vertices[i + 1], attrib.vertices[i + 2]);
       vertices.push_back(vertex);
+      float len = vertex.position.Norm2();
+      if (len > maxRadius)
+      {
+        maxRadius = len;
+      }
     }
+    maxRadius = sqrt(maxRadius);
 
     // Loop over shapes
     for (size_t s = 0; s < shapes.size(); s++)
@@ -89,7 +96,13 @@ namespace g3dcommon
 
   void TriangleMesh::Render(Renderer* renderer)
   {
-    if (nullptr == renderer)
+    if (nullptr == renderer || nullptr == camera)
+    {
+      return;
+    }
+
+    // Cull invisible objects based on frustum.
+    if (camera->CullObject(this))
     {
       return;
     }

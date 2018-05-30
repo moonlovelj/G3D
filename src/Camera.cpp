@@ -1,5 +1,6 @@
 #include "Camera.h"
 #include "Common.h"
+#include "SceneObject.h"
 
 namespace g3dcommon
 {
@@ -192,6 +193,57 @@ namespace g3dcommon
     // World-to-camera translation.
     Vector3D transW2C(-pos);
     w2c(3, 0) = Dot(transW2C, right); w2c(3, 1) = Dot(transW2C, up); w2c(3, 2) = Dot(transW2C, dir);
+  }
+
+  bool Camera::CullObject(SceneObject* object) const
+  {
+    Vector3D position = object->GetPosition() * w2c;
+    float maxRadius = object->GetMaxRadius();
+    if (position.z + maxRadius < nClip || position.z - maxRadius > fClip)
+    {
+      return true;
+    }
+
+    float halfH = tan(Radians(hFov*0.5f)) * fClip;
+    float halfV = tan(Radians(vFov*0.5f)) * fClip;
+    Vector3D leftTop(-halfH, halfV, fClip);
+    Vector3D rightTop(halfH, halfV, fClip);
+    Vector3D leftBottom(-halfH, -halfV, fClip);
+    Vector3D rightBottom(halfH, -halfV, fClip);
+
+    // test left plane.
+    Vector3D n = Cross(leftBottom, leftTop);
+    n.Normalize();
+    if (DistancePlaneToPoint(n, 0.f, position) > maxRadius)
+    {
+      return true;
+    }
+
+    // test right plane.
+    n = Cross(rightTop, rightBottom);
+    n.Normalize();
+    if (DistancePlaneToPoint(n, 0.f, position) > maxRadius)
+    {
+      return true;
+    }
+
+    // test top plane.
+    n = Cross(leftTop, rightTop);
+    n.Normalize();
+    if (DistancePlaneToPoint(n, 0.f, position) > maxRadius)
+    {
+      return true;
+    }
+
+    // test bottom plane.
+    n = Cross(rightBottom, leftBottom);
+    n.Normalize();
+    if (DistancePlaneToPoint(n, 0.f, position) > maxRadius)
+    {
+      return true;
+    }
+
+    return false;
   }
 
   

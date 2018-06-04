@@ -12,7 +12,7 @@ namespace g3dcommon
     camera(nullptr)
   {
     TriangleMesh* mesh = new TriangleMesh;
-    mesh->Load("cube.obj");
+    mesh->Load("test.obj");
     sceneObjects.insert(std::make_pair(mesh->Index(), mesh));
   }
 

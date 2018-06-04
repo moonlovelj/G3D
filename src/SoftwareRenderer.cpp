@@ -150,6 +150,40 @@ namespace g3dcommon
     }
   }
 
+  void SoftwareRenderer::RasterizeTriangle(float x0, float y0, float x1, float y1, float x2, float y2, Color color)
+  {
+    if ((x0 < 0 && x1 < 0 && x2 < 0) ||
+      (y0 < 0 && y1 < 0 && y2 < 0) ||
+      (x0 >= targetWidth && x1 >= targetWidth && x2 >= targetWidth) ||
+      (y0 >= targetHeight && y1 >= targetHeight && y2 >= targetHeight))
+      return;
+
+    float dY0 = y1 - y0, dY1 = y2 - y1, dY2 = y0 - y2;
+    float dX0 = x1 - x0, dX1 = x2 - x1, dX2 = x0 - x2;
+
+    int minX = static_cast<int>(std::min(std::min(x0, x1), x2) + 0.5f);
+    int minY = static_cast<int>(std::min(std::min(y0, y1), y2) + 0.5f);
+    int maxX = static_cast<int>(std::max(std::max(x0, x1), x2) + 0.5f);
+    int maxY = static_cast<int>(std::max(std::max(y0, y1), y2) + 0.5f);
+
+    for (int sy = minY; sy <= maxY; sy++)
+    {
+      for (int sx = minX; sx <= maxX; sx++)
+      {
+        if (sx < 0 || sx >= static_cast<int>(targetWidth)) continue;
+        if (sy < 0 || sy >= static_cast<int>(targetHeight)) continue;
+
+        bool b1 = (sx - x0)*dY0 - (sy - y0)*dX0 <= FLT_EPSILON;
+        bool b2 = (sx - x1)*dY1 - (sy - y1)*dX1 <= FLT_EPSILON;
+        bool b3 = (sx - x2)*dY2 - (sy - y2)*dX2 <= FLT_EPSILON;
+        if (b1 == b2 && b2 == b3)
+        {
+          Rasterize2DPoint(static_cast<float>(sx), static_cast<float>(sy), color);
+        }
+      }
+    }
+  }
+
   void SoftwareRenderer::DrawPrimitive(const std::vector<Vertex>& vertices, const std::vector<size_t>& indexs, size_t primitiveNum, EPrimitiveType primitiveType)
   {
     switch (primitiveType)
@@ -178,9 +212,7 @@ namespace g3dcommon
         Vector3D v0 = camera->ConvertViewToScreen(camera->ProjectToView(camera->ConvertWorldToCamera(vertex0.transformedPosition)));
         Vector3D v1 = camera->ConvertViewToScreen(camera->ProjectToView(camera->ConvertWorldToCamera(vertex1.transformedPosition)));
         Vector3D v2 = camera->ConvertViewToScreen(camera->ProjectToView(camera->ConvertWorldToCamera(vertex2.transformedPosition)));
-        Rasterize2DLine(v0.x, v0.y, v1.x, v1.y, red);
-        Rasterize2DLine(v0.x, v0.y, v2.x, v2.y, red);
-        Rasterize2DLine(v2.x, v2.y, v1.x, v1.y, red);
+        RasterizeTriangle(v0.x, v0.y, v1.x, v1.y, v2.x, v2.y, red);
       }
       break;
     default:

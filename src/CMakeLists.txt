@@ -7,6 +7,7 @@ set(G3D_SOURCE_LIST
 	SceneObject.cpp
 	Scene.cpp
 	TriangleMesh.cpp
+	Light.cpp
 )
 
 #-------------------------------------------------------------------------------

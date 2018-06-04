@@ -98,6 +98,11 @@ namespace g3dcommon
     virtual void Rasterize2DLine(float x0, float y0, float x1, float y1, Color color) = 0;
 
     /**
+    * Rasterize a triangle.
+    */
+    virtual void RasterizeTriangle(float x0, float y0, float x1, float y1, float x2, float y2, Color color) = 0;
+
+    /**
     * Draw primitives from vertex arrays and index arrays.
     */
     virtual void DrawPrimitive(const std::vector<Vertex>& vertices, const std::vector<size_t>& indexs, size_t primitiveNum, EPrimitiveType primitiveType) = 0;

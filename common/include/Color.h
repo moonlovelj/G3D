@@ -89,22 +89,22 @@ namespace g3dcommon
     // Get the value of the red channel(unsigned character 0-255).
     inline unsigned char R() const
     {
-      return std::min(std::max(static_cast<int>(r * 255), 0), 255);
+      return static_cast<unsigned char>(std::min(std::max(r * 255.f, 0.f), 255.f));
     }
     // Get the value of the green channel(unsigned character 0-255).
     inline unsigned char G() const
     {
-      return std::min(std::max(static_cast<int>(g * 255), 0), 255);
+      return static_cast<unsigned char>(std::min(std::max(g * 255.f, 0.f), 255.f));
     }
     // Get the value of the blue channel(unsigned character 0-255).
     inline unsigned char B() const
     {
-      return std::min(std::max(static_cast<int>(b * 255), 0), 255);
+      return static_cast<unsigned char>(std::min(std::max(b * 255.f, 0.f), 255.f));
     }
     // Get the value of the alpha channel(unsigned character 0-255).
     inline unsigned char A() const
     {
-      return std::min(std::max(static_cast<int>(a * 255), 0), 255);
+      return static_cast<unsigned char>(std::min(std::max(a * 255.f, 0.f), 255.f));
     }
     // Formats four color channels to a range of 0 to 1.
     void Clamp();

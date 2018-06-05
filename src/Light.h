@@ -26,7 +26,7 @@ namespace g3dcommon
   class PointLight : public SceneLight
   {
   public:
-    PointLight(const Color& rad, const Vector3D& pos, float c = 0.f, float l = 0.002f, float q = 0.f);
+    PointLight(const Color& rad, const Vector3D& pos, float c = 0.f, float l = 0.05f, float q = 0.f);
     Color SampleL(const Vector3D& p, Vector3D* wi) const;
   private:
     Color radiance;
@@ -39,7 +39,7 @@ namespace g3dcommon
   {
   public:
     SpotLight(const Color& rad, const Vector3D& pos,const Vector3D& dir, 
-      float angle, float c = 0.f, float l = 0.002f, float q = 0.f, int p = 2);
+      float angle, float c = 0.f, float l = 0.05f, float q = 0.f, int p = 2);
 
     Color SampleL(const Vector3D& p, Vector3D* wi) const;
 

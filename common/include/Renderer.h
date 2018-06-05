@@ -2,14 +2,12 @@
 #define __RENDERER_H__
 
 #include "Vector3D.h"
+#include "Color.h"
 #include <string>
 #include <vector>
 
-
 namespace g3dcommon
 {
-  class Color;
-
   /**
   * Vertex data structure.
   */
@@ -19,6 +17,12 @@ namespace g3dcommon
     Vector3D position;
     // Transformed position.
     Vector3D transformedPosition;
+    // Normal of vertex.
+    Vector3D normal;
+    // Color of vertex.
+    Color color;
+    // New color of vertex.
+    Color newColor;
   };
 
   /**
@@ -90,17 +94,22 @@ namespace g3dcommon
     /**
     * Rasterize a point.
     */
-    virtual void Rasterize2DPoint(float x, float y, Color color) = 0;
+    virtual void Rasterize2DPoint(float x, float y, const Color& color) = 0;
 
     /**
     * Rasterize a line.
     */
-    virtual void Rasterize2DLine(float x0, float y0, float x1, float y1, Color color) = 0;
+    virtual void Rasterize2DLine(float x0, float y0, float x1, float y1, const Color& color) = 0;
 
     /**
     * Rasterize a triangle.
     */
-    virtual void RasterizeTriangle(float x0, float y0, float x1, float y1, float x2, float y2, Color color) = 0;
+    virtual void RasterizeTriangle(float x0, float y0, float x1, float y1, float x2, float y2, const Color& color) = 0;
+
+    /**
+    * Rasterize a triangle based on vertex interpolation.
+    */
+    virtual void RasterizeTriangle(const Vertex& v0, const Vertex& v1, const Vertex& v2) = 0;
 
     /**
     * Draw primitives from vertex arrays and index arrays.

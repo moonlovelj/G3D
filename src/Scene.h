@@ -5,28 +5,35 @@
 #include "Renderer.h"
 #include "SceneObject.h"
 #include <map>
+#include <list>
 
 namespace g3dcommon
 {
- class Scene
- {
- public:
-   Scene();
-   ~Scene();
-    
-   // To render the scene.
-   void Render(Renderer* renderer);
-   // Set camera.
-   void SetCamera(Camera* camera);
-   // Returns camera.
-   Camera* GetCamera() { return camera; }
- private:
+  class SceneLight;
 
-   // List of objects in the scene.
-   std::map<size_t, SceneObject*> sceneObjects;
-   // The camera used to render the scene.
-   Camera* camera;
- };
+  class Scene
+  {
+  public:
+    Scene();
+    ~Scene();
+
+    // To render the scene.
+    void Render(Renderer* renderer);
+    // Set camera.
+    void SetCamera(Camera* camera);
+    // Returns camera.
+    Camera* GetCamera() { return camera; }
+    // Returns scene lights.
+    const std::list<SceneLight*>& GetSceneLights() const { return sceneLights; }
+  private:
+
+    // List of objects in the scene.
+    std::map<size_t, SceneObject*> sceneObjects;
+    // List of lights in the scene.
+    std::list<SceneLight*> sceneLights;
+    // The camera used to render the scene.
+    Camera* camera;
+  };
 }
 
 #endif

@@ -1,6 +1,7 @@
 #include "Camera.h"
 #include "Common.h"
 #include "SceneObject.h"
+#include "Quaternion.h"
 
 namespace g3dcommon
 {
@@ -27,7 +28,7 @@ namespace g3dcommon
     // Camera x axis.
     Vector3D right = Cross(up, dir).Unit();
     // Camera y axis.
-    Vector3D upNew = Cross(dir, right);
+    Vector3D upNew = Cross(dir, right).Unit();
     // World-to-camera translation.
     Vector3D transW2C(-pos);
 
@@ -35,7 +36,6 @@ namespace g3dcommon
                     right.y,              upNew.y,              dir.y,              0,
                     right.z,              upNew.z,              dir.z,              0,
                     Dot(transW2C, right), Dot(transW2C, upNew), Dot(transW2C, dir), 1);
-
     
     projectionMatrix(0, 0) = screenDist;
     projectionMatrix(1, 1) = screenDist*aspectRatio;
@@ -124,7 +124,7 @@ namespace g3dcommon
     // Camera x axis.
     Vector3D right = Cross(up, dir).Unit();
     // Camera y axis.
-    Vector3D upNew = Cross(dir, right);
+    Vector3D upNew = Cross(dir, right).Unit();
     // World-to-camera translation.
     Vector3D transW2C(-pos);
 
@@ -145,7 +145,7 @@ namespace g3dcommon
     // Camera x axis.
     Vector3D right = Cross(up, dir).Unit();
     // Camera y axis.
-    Vector3D upNew = Cross(dir, right);
+    Vector3D upNew = Cross(dir, right).Unit();
     // World-to-camera translation.
     Vector3D transW2C(-pos);
 
@@ -252,4 +252,33 @@ namespace g3dcommon
     return Dot(n, view) < 0.f;
   }
   
+  void Camera::RotateBy(const float dTheta, const float dPhi)
+  {
+    Quaternion q;
+    if (fabs(dTheta) > fabs(dPhi))
+    {
+      q.FromAxisAngle(Up(), dTheta);
+      pos = q.RotatedVector(pos);
+    }
+    else
+    {
+      q.FromAxisAngle(Right(), dPhi);
+      pos = q.RotatedVector(pos);
+    }
+
+    Vector3D up = Up();
+    // Camera z axis.
+    Vector3D dir = (targetPos - pos).Unit();
+    // Camera x axis.
+    Vector3D right = Cross(up, dir).Unit();
+    // Camera y axis.
+    Vector3D upNew = Cross(dir, right).Unit();
+    // World-to-camera translation.
+    Vector3D transW2C(-pos);
+
+    w2c = Matrix4x4(right.x, upNew.x, dir.x, 0,
+                    right.y, upNew.y, dir.y, 0,
+                    right.z, upNew.z, dir.z, 0,
+                    Dot(transW2C, right), Dot(transW2C, upNew), Dot(transW2C, dir), 1);
+  }
 }

@@ -70,6 +70,10 @@ namespace g3dcommon
     // parameter n does not need to be normalized.
     bool CullFace(const Vector3D& n, const Vector3D& point) const;
 
+    // dTheta represents rotation about the up axis,
+    // dPhi represents rotation about the right axis.
+    void RotateBy(const float dTheta, const float dPhi);
+
   private:
     // Horizontal and vertical field of view.
     float hFov, vFov;
@@ -88,7 +92,6 @@ namespace g3dcommon
     // Directx style projection matrix, x and y are formatted between - 1 and 1,
     // z is formatted between 0 and 1.
     Matrix4x4 projectionMatrix;
-
 
   };
 

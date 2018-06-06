@@ -38,8 +38,10 @@ namespace g3dcommon
     // Draw primitives.
     void DrawPrimitive(const std::vector<Vertex>& vertices, const std::vector<size_t>& indexs, size_t primitiveNum, EPrimitiveType primitiveType);
 
-    // Keyboard event callback.
+    // Keyboard and mouse event callback.
     void KeyboardEvent(int key, int event, unsigned char mods);
+    void MouseEvent(int key, int event, unsigned char mods);
+    void CursorEvent(float x, float y);
 
     // Shade triangle.
     void ShadeTriangle(Vertex& vertex0, Vertex& vertex1, Vertex& vertex2);
@@ -54,6 +56,11 @@ namespace g3dcommon
     Scene* scene;
     // The camera to be used.
     Camera* camera;
+
+    // Is or not mouse button down.
+    bool bMouseButtonDown;
+    // Mouse cursor position.
+    float mouseX, mouseY;
   };
 }
 

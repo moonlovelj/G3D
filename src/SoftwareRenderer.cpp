@@ -3,6 +3,7 @@
 #include "Common.h"
 #include <iostream>
 #include "Light.h"
+#include <SDL.h>
 
 
 
@@ -14,9 +15,12 @@ namespace g3dcommon
   SoftwareRenderer::SoftwareRenderer() :
     renderTarget(nullptr),
     scene(nullptr),
-    camera(nullptr)
+    camera(nullptr),
+    mouseX(0.f),
+    mouseY(0.f),
+    bMouseButtonDown(false)
   {
-    shadeModel = EFlatShade;
+    shadeModel = EGouraudShade;
   }
 
   SoftwareRenderer::~SoftwareRenderer()
@@ -320,6 +324,33 @@ namespace g3dcommon
     default:
       break;
     }
+  }
+
+  void SoftwareRenderer::MouseEvent(int key, int event, unsigned char mods)
+  {
+    if (event == SDL_MOUSEBUTTONDOWN)
+    {
+      bMouseButtonDown = true;
+    }
+    else
+    {
+      bMouseButtonDown = false;
+    }
+  }
+
+  void SoftwareRenderer::CursorEvent(float x, float y)
+  {
+    if (bMouseButtonDown)
+    {
+      float dx = x - mouseX;
+      float dy = y - mouseY;
+      if (nullptr != camera)
+      {
+        camera->RotateBy(dx*0.01f, dy*0.01f);
+      }
+    }
+    mouseX = x;
+    mouseY = y;
   }
 
   void SoftwareRenderer::ShadeTriangle(Vertex& vertex0, Vertex& vertex1, Vertex& vertex2)

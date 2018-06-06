@@ -96,6 +96,20 @@ namespace g3dcommon
           renderer->KeyboardEvent(sdlEvent.key.keysym.sym, sdlEvent.type, 0);
         }
       }
+      else if (sdlEvent.type == SDL_MOUSEBUTTONDOWN || sdlEvent.type == SDL_MOUSEBUTTONUP)
+      {
+        if (nullptr != renderer)
+        {
+          renderer->MouseEvent(sdlEvent.key.keysym.sym, sdlEvent.type, 0);
+        }
+      }
+      else if (sdlEvent.type == SDL_MOUSEMOTION)
+      {
+        if (nullptr != renderer)
+        {
+          renderer->CursorEvent(static_cast<float>(sdlEvent.motion.x), static_cast<float>(sdlEvent.motion.y));
+        }
+      }
     }
 
     // Lock surface.

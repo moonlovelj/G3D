@@ -16,8 +16,12 @@ namespace g3dcommon
     mesh->Load("cube.obj");
     sceneObjects.insert(std::make_pair(mesh->Index(), mesh));
 
-    auto light = new PointLight(Color(0.4f, 0.4f, 0.4f, 1.f), Vector3D(10, 2, -4));
+    auto light = new DirectionalLight({ 0.2f, 0.2f, 0.2f }, { -1, 0, 0 });
     sceneLights.push_back(light);
+    auto light1 = new PointLight({ 0.1f, 0.1f, 0.1f, 1.f }, { 0, 4, -1 });
+    sceneLights.push_back(light1);
+    auto light2 = new AmbientLight(Color{ 0.2f, 0.2f, 0.2f, 1.f });
+    sceneLights.push_back(light2);
   }
 
   Scene::~Scene()

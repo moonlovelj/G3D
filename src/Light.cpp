@@ -11,10 +11,10 @@ namespace g3dcommon
     dirToLight = -lightDir.Unit();
   }
 
-  Color DirectionalLight::SampleL(const Vector3D& p, Vector3D* wi) const
+  Color DirectionalLight::SampleL(const Vector3D& p, const Vector3D& n) const
   {
-    *wi = dirToLight;
-    return radiance;
+    float cosTheta = Dot(n, dirToLight);
+    return radiance * (cosTheta > 0.f ? cosTheta : 0.f);
   }
 
 
@@ -28,16 +28,17 @@ namespace g3dcommon
 
   }
 
-  Color PointLight::SampleL(const Vector3D& p, Vector3D* wi) const
+  Color PointLight::SampleL(const Vector3D& p, const Vector3D& n) const
   {
-    *wi = position - p;
-    float d = wi->Norm();
-    wi->Normalize();
-    return radiance * (1.f / (kc + kl*d + kq*d*d));
+    Vector3D wi = position - p;
+    float d = wi.Norm();
+    wi.Normalize();
+    float cosTheta = Dot(n, wi);
+    return radiance * (1.f / (kc + kl*d + kq*d*d)) * (cosTheta > 0.f ? cosTheta : 0.f);
   }
 
 
-  SpotLight::SpotLight(const Color& rad, const Vector3D& pos, const Vector3D& dir, 
+  SpotLight::SpotLight(const Color& rad, const Vector3D& pos, const Vector3D& dir,
     float angle, float c /*= 0.f*/, float l /*= 0.002f*/, float q /*= 0.f*/, int p /*= 2*/)
     : radiance(rad),
     position(pos),
@@ -48,26 +49,28 @@ namespace g3dcommon
     kq(q),
     pf(2)
   {
-
+    direction.Normalize();
   }
 
-  Color SpotLight::SampleL(const Vector3D& p, Vector3D* wi) const
+  Color SpotLight::SampleL(const Vector3D& p, const Vector3D& n) const
   {
-    *wi = position - p;
-    float d = wi->Norm();
-    wi->Normalize();
-    float cosTheta = Dot(direction, -(*wi));
-    Color r(0.f, 0.f, 0.f, 1.f);
-    if (cosTheta > 0.f && cosTheta > cos(Radians(angle * 0.5f)))
+    Vector3D wi = position - p;
+    float d = wi.Norm();
+    wi.Normalize();
+    float cosAlpha = Dot(direction, -wi);
+
+    if (cosAlpha < cos(Radians(angle * 0.5f)))
     {
-      float eIndex = cosTheta;
-      for (int i = 1; i < pf; i++)
-      {
-        eIndex *= cosTheta;
-      }
-      r = radiance * eIndex * (1.f / (kc + kl*d + kq*d*d));
+      return Color(0.f, 0.f, 0.f, 1.f);
     }
-    return r;
+
+    float eIndex = cosAlpha;
+    for (int i = 1; i < pf; i++)
+    {
+      eIndex *= cosAlpha;
+    }
+    float cosTheta = Dot(n, wi);
+    return radiance * eIndex * (1.f / (kc + kl*d + kq*d*d)) * (cosTheta > 0.f ? cosTheta : 0.f);
   }
 
 }

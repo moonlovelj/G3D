@@ -9,14 +9,14 @@
 namespace g3dcommon
 {
 
-  static const Color red(1.f,0.f,0.f,1.f);
+  static const Color red(1.f, 0.f, 0.f, 1.f);
 
   SoftwareRenderer::SoftwareRenderer() :
     renderTarget(nullptr),
     scene(nullptr),
     camera(nullptr)
   {
-
+    shadeModel = EFlatShade;
   }
 
   SoftwareRenderer::~SoftwareRenderer()
@@ -26,7 +26,7 @@ namespace g3dcommon
 
   void SoftwareRenderer::Init()
   {
-    camera = new Camera(Vector3D(2,0,-4), Vector3D(0, 0, 0), Vector3D(0, 1, 0), 90, 1, 1000, targetWidth, targetHeight);
+    camera = new Camera(Vector3D(2, 0, -4), Vector3D(0, 0, 0), Vector3D(0, 1, 0), 90, 1, 1000, targetWidth, targetHeight);
     if (scene)
     {
       scene->SetCamera(camera);
@@ -68,9 +68,9 @@ namespace g3dcommon
     }
     int index = sy * targetWidth + sx;
     renderTarget[index * 4] = color.R();
-    renderTarget[index * 4  + 1] = color.G();
-    renderTarget[index * 4  + 2] = color.B();
-    renderTarget[index * 4  + 3] = color.A();
+    renderTarget[index * 4 + 1] = color.G();
+    renderTarget[index * 4 + 2] = color.B();
+    renderTarget[index * 4 + 3] = color.A();
   }
 
   void SoftwareRenderer::Rasterize2DLine(float x0, float y0, float x1, float y1, const Color& color)
@@ -187,9 +187,9 @@ namespace g3dcommon
 
   void SoftwareRenderer::RasterizeTriangle(const Vertex& v0, const Vertex& v1, const Vertex& v2)
   {
-    float x0 = v0.transformedPosition.x, y0 = v0.transformedPosition.y;
-    float x1 = v1.transformedPosition.x, y1 = v1.transformedPosition.y;
-    float x2 = v2.transformedPosition.x, y2 = v2.transformedPosition.y;
+    float x0 = v0.newPosition.x, y0 = v0.newPosition.y;
+    float x1 = v1.newPosition.x, y1 = v1.newPosition.y;
+    float x2 = v2.newPosition.x, y2 = v2.newPosition.y;
 
     if ((x0 < 0 && x1 < 0 && x2 < 0) ||
       (y0 < 0 && y1 < 0 && y2 < 0) ||
@@ -227,7 +227,7 @@ namespace g3dcommon
           float u2 = sqrt(dX0*dX0 + dY0*dY0)*f0;
           float u = 1.f / (u0 + u1 + u2);
           u0 *= u; u1 *= u; u2 *= u;
-          Color c = v0.color*u0 + v1.color * u1 + v2.color * u2;
+          Color c = v0.newColor*u0 + v1.newColor * u1 + v2.newColor * u2;
           Rasterize2DPoint(static_cast<float>(sx), static_cast<float>(sy), c);
         }
       }
@@ -245,69 +245,39 @@ namespace g3dcommon
     case g3dcommon::ETriangle:
       for (size_t i = 0; i < primitiveNum; i++)
       {
-        size_t index0 = indexs[i * 3 + 0];
-        size_t index1 = indexs[i * 3 + 1];
-        size_t index2 = indexs[i * 3 + 2];
-        Vertex vertex0 = vertices[index0];
-        Vertex vertex1 = vertices[index1];
-        Vertex vertex2 = vertices[index2];
+        auto vertex0 = vertices[indexs[i * 3 + 0]];
+        auto vertex1 = vertices[indexs[i * 3 + 1]];
+        auto vertex2 = vertices[indexs[i * 3 + 2]];
 
         // back face culling.
-        Vector3D n = Cross(vertex1.transformedPosition - vertex0.transformedPosition, vertex2.transformedPosition - vertex0.transformedPosition);
-        if (camera->CullFace(n, vertex0.transformedPosition))
+        Vector3D n = Cross(vertex1.newPosition - vertex0.newPosition, vertex2.newPosition - vertex0.newPosition);
+        if (camera->CullFace(n, vertex0.newPosition))
         {
           continue;
         }
 
-        /*auto lights = scene->GetSceneLights();
-        Color c;
-        for (auto light : lights)
-        {
-        Vector3D wi;
-        Color sample = light->SampleL(vertex0.transformedPosition, &wi);
-        float cosTheat = Dot(n.Unit(), wi);
-        if (cosTheat > 0.f)
-        {
-        c += (vertex0.color * sample * cosTheat);
-        }
-        }
-        c.a = 1.f;*/
-        Color c0, c1, c2;
-        const auto& lights = scene->GetSceneLights();
-        for (auto light : lights)
-        {
-          Vector3D wi;
-          Color sample = light->SampleL(vertex0.transformedPosition, &wi);
-          float cosTheat = Dot(vertex0.normal, wi);
-          if (cosTheat > 0.f)
-          {
-            c0 += (vertex0.color * sample * cosTheat);
-          }
+        // Shade triangle, including lighting calculations.
+        ShadeTriangle(vertex0, vertex1, vertex2);
 
-          sample = light->SampleL(vertex1.transformedPosition, &wi);
-          cosTheat = Dot(vertex1.normal, wi);
-          if (cosTheat > 0.f)
-          {
-            c1 += (vertex1.color * sample * cosTheat);
-          }
-
-          sample = light->SampleL(vertex2.transformedPosition, &wi);
-          cosTheat = Dot(vertex2.normal, wi);
-          if (cosTheat > 0.f)
-          {
-            c2 += (vertex2.color * sample * cosTheat);
-          }
-        }
-        vertex0.color = c0;
-        vertex1.color = c1;
-        vertex2.color = c2;
-
-        vertex0.transformedPosition = camera->ConvertViewToScreen(camera->ProjectToView(camera->ConvertWorldToCamera(vertex0.transformedPosition)));
-        vertex1.transformedPosition = camera->ConvertViewToScreen(camera->ProjectToView(camera->ConvertWorldToCamera(vertex1.transformedPosition)));
-        vertex2.transformedPosition = camera->ConvertViewToScreen(camera->ProjectToView(camera->ConvertWorldToCamera(vertex2.transformedPosition)));
+        // Perform coordinate transformation.
+        vertex0.newPosition = camera->ConvertViewToScreen(camera->ProjectToView(camera->ConvertWorldToCamera(vertex0.newPosition)));
+        vertex1.newPosition = camera->ConvertViewToScreen(camera->ProjectToView(camera->ConvertWorldToCamera(vertex1.newPosition)));
+        vertex2.newPosition = camera->ConvertViewToScreen(camera->ProjectToView(camera->ConvertWorldToCamera(vertex2.newPosition)));
         //RasterizeTriangle(vertex0.transformedPosition.x, vertex0.transformedPosition.y, vertex1.transformedPosition.x, vertex1.transformedPosition.y, vertex2.transformedPosition.x, vertex2.transformedPosition.y, c);
 
-        RasterizeTriangle(vertex0, vertex1, vertex2);
+        switch (shadeModel)
+        {
+        case g3dcommon::EConstantShade:
+        case g3dcommon::EFlatShade:
+          RasterizeTriangle(vertex0.newPosition.x, vertex0.newPosition.y, vertex1.newPosition.x, vertex1.newPosition.y, vertex2.newPosition.x, vertex2.newPosition.y, vertex0.newColor);
+          break;
+        case g3dcommon::EGouraudShade:
+          RasterizeTriangle(vertex0, vertex1, vertex2);
+          break;
+        default:
+          break;
+        }
+
       }
       break;
     default:
@@ -346,6 +316,47 @@ namespace g3dcommon
         Vector3D v = camera->Right();
         camera->Move(v*0.1f);
       }
+      break;
+    default:
+      break;
+    }
+  }
+
+  void SoftwareRenderer::ShadeTriangle(Vertex& vertex0, Vertex& vertex1, Vertex& vertex2)
+  {
+    switch (shadeModel)
+    {
+    case g3dcommon::EConstantShade:
+    {
+                                    vertex0.newColor = vertex0.color;
+    }
+      break;
+    case g3dcommon::EFlatShade:
+    {
+                                Vector3D faceNormal = Cross(vertex1.newPosition - vertex0.newPosition, vertex2.newPosition - vertex0.newPosition);
+                                faceNormal.Normalize();
+                                vertex0.newColor = { 0.f, 0.f, 0.f, 1.f };
+                                const auto& lights = scene->GetSceneLights();
+                                for (auto light : lights)
+                                {
+                                  vertex0.newColor += (vertex0.color * light->SampleL(vertex0.newPosition, faceNormal));
+                                }
+    }
+      break;
+    case g3dcommon::EGouraudShade:
+    {
+                                   vertex0.newColor = { 0.f, 0.f, 0.f, 1.f };
+                                   vertex1.newColor = { 0.f, 0.f, 0.f, 1.f };
+                                   vertex2.newColor = { 0.f, 0.f, 0.f, 1.f };
+                                   const auto& lights = scene->GetSceneLights();
+                                   for (auto light : lights)
+                                   {
+                                     vertex0.newColor += (vertex0.color * light->SampleL(vertex0.newPosition, vertex0.normal));
+                                     vertex1.newColor += (vertex1.color * light->SampleL(vertex1.newPosition, vertex1.normal));
+                                     vertex2.newColor += (vertex2.color * light->SampleL(vertex2.newPosition, vertex2.normal));
+                                   }
+    }
+
       break;
     default:
       break;

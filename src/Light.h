@@ -9,7 +9,7 @@ namespace g3dcommon
   class SceneLight
   {
   public:
-    virtual Color SampleL(const Vector3D& p, Vector3D* wi) const = 0;
+    virtual Color SampleL(const Vector3D& p, const Vector3D& n) const = 0;
   };
 
 
@@ -17,7 +17,7 @@ namespace g3dcommon
   {
   public:
     DirectionalLight(const Color& rad, const Vector3D& lightDir);
-    Color SampleL(const Vector3D& p, Vector3D* wi) const;
+    Color SampleL(const Vector3D& p, const Vector3D& n) const;
   private:
     Color radiance;
     Vector3D dirToLight;
@@ -27,7 +27,7 @@ namespace g3dcommon
   {
   public:
     PointLight(const Color& rad, const Vector3D& pos, float c = 0.f, float l = 0.05f, float q = 0.f);
-    Color SampleL(const Vector3D& p, Vector3D* wi) const;
+    Color SampleL(const Vector3D& p, const Vector3D& n) const;
   private:
     Color radiance;
     Vector3D position;
@@ -41,7 +41,7 @@ namespace g3dcommon
     SpotLight(const Color& rad, const Vector3D& pos,const Vector3D& dir, 
       float angle, float c = 0.f, float l = 0.05f, float q = 0.f, int p = 2);
 
-    Color SampleL(const Vector3D& p, Vector3D* wi) const;
+    Color SampleL(const Vector3D& p, const Vector3D& n) const;
 
   private:
     Color radiance;
@@ -54,6 +54,15 @@ namespace g3dcommon
     int pf;
   }; 
 
+  class AmbientLight : public SceneLight
+  {
+  public:
+    AmbientLight(const Color& rad) : radiance(rad) { }
+
+    Color SampleL(const Vector3D& p, const Vector3D& n) const { return radiance; }
+  private:
+    Color radiance;
+  };
 
 }
 #endif

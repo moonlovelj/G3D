@@ -41,6 +41,9 @@ namespace g3dcommon
     // Keyboard event callback.
     void KeyboardEvent(int key, int event, unsigned char mods);
 
+    // Shade triangle.
+    void ShadeTriangle(Vertex& vertex0, Vertex& vertex1, Vertex& vertex2);
+
   private:
 
     // Render target memory location.

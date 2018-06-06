@@ -16,7 +16,7 @@ namespace g3dcommon
     // Position of vertex.
     Vector3D position;
     // Transformed position.
-    Vector3D transformedPosition;
+    Vector3D newPosition;
     // Normal of vertex.
     Vector3D normal;
     // Color of vertex.
@@ -40,6 +40,16 @@ namespace g3dcommon
     ELine,
     ETriangle
   };
+  
+  /**
+  * Shade model.
+  */
+  enum EShadeModel
+  {
+    EConstantShade,
+    EFlatShade,
+    EGouraudShade
+  };
 
   /**
    * Abstract renderer definition.
@@ -51,8 +61,13 @@ namespace g3dcommon
    * does not know how to handle to the renderer so that the renderer can define
    * its own control keybindings, etc.
    */
-  class Renderer {
+  class Renderer 
+  {
   public:
+    /**
+    * Default constructor.
+    */
+    Renderer() : shadeModel(EConstantShade) {}
 
     /**
      * Virtual Destructor.
@@ -175,6 +190,19 @@ namespace g3dcommon
      * \codepoint Unicode code for character input by the user.
      */
     virtual void CharEvent(unsigned int codepoint) { }
+
+    /**
+    * Set shade model of the renderer.
+    */
+    virtual void SetShadeModel(EShadeModel sModel) { shadeModel = sModel; }
+
+    /**
+    * Returns shade model of the renderer.
+    */
+    virtual EShadeModel GetShadeModel() const { return shadeModel; }
+
+protected:
+    EShadeModel shadeModel;
 
   };
 

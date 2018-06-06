@@ -46,7 +46,8 @@ namespace g3dcommon
     {
       Vertex vertex;
       vertex.position = Vector3D(attrib.vertices[i], attrib.vertices[i + 1], attrib.vertices[i + 2]);
-      vertex.color = {0.f, 1.f, 0.f, 1.f};
+      vertex.color = { 0.f, 1.f, 0.f, 1.f };
+      vertex.newColor = { 0.f, 1.f, 0.f, 1.f };
       vertices.push_back(vertex);
       float len = vertex.position.Norm2();
       if (len > maxRadius)
@@ -111,7 +112,7 @@ namespace g3dcommon
     const Matrix4x4& mt = GetTransformationMatrix();
     for (auto& v : vertices)
     {
-      v.transformedPosition = v.position * mt;
+      v.newPosition = v.position * mt;
       v.normal = { 0.f, 0.f, 0.f };
     }
 
@@ -122,7 +123,7 @@ namespace g3dcommon
       Vertex& v0 = vertices[indexs[i + 0]];
       Vertex& v1 = vertices[indexs[i + 1]];
       Vertex& v2 = vertices[indexs[i + 2]];
-      Vector3D faceN = Cross(v1.transformedPosition - v0.transformedPosition, v2.transformedPosition - v0.transformedPosition);
+      Vector3D faceN = Cross(v1.newPosition - v0.newPosition, v2.newPosition - v0.newPosition);
       v0.normal += faceN;
       v1.normal += faceN;
       v2.normal += faceN;

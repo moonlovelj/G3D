@@ -9,6 +9,8 @@ namespace g3dcommon
 {
   class Scene;
   struct Triangle;
+  class Sampler2D;
+  struct Texture;
 
   class SoftwareRenderer : public Renderer
   {
@@ -37,7 +39,7 @@ namespace g3dcommon
     void RasterizeTriangle(const Vertex& v0, const Vertex& v1, const Vertex& v2);
     // Draw primitives.
     void DrawPrimitive(const std::vector<Vertex>& vertices, const std::vector<size_t>& indexs, size_t primitiveNum, EPrimitiveType primitiveType);
-
+    
     // Keyboard and mouse event callback.
     void KeyboardEvent(int key, int event, unsigned char mods);
     void MouseEvent(int key, int event, unsigned char mods);
@@ -56,6 +58,8 @@ namespace g3dcommon
     Scene* scene;
     // The camera to be used.
     Camera* camera;
+    // 2D sampler.
+    Sampler2D* sampler2d;
 
     // Is or not mouse button down.
     bool bMouseButtonDown;

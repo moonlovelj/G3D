@@ -23,6 +23,10 @@ namespace g3dcommon
     Color color;
     // New color of vertex.
     Color newColor;
+    // Texture coordinates.
+    float u, v;
+    // Texture index.
+    int textureIndex;
   };
 
   /**

@@ -8,6 +8,11 @@ set(G3D_SOURCE_LIST
 	Scene.cpp
 	TriangleMesh.cpp
 	Light.cpp
+	Texture.cpp
+	TextureManager.cpp
+	tga.c
+	tgaread.c
+	tgawrite.c
 )
 
 #-------------------------------------------------------------------------------
@@ -36,6 +41,7 @@ target_link_libraries( g3d
     common ${COMMON_LIBRARIES}
     SDL2 ${SDL_LIBRARIES}
 )
+
 
 # Put executable in build directory root
 set(EXECUTABLE_OUTPUT_PATH ..)

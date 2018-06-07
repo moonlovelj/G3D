@@ -1,5 +1,7 @@
 #include "TriangleMesh.h"
 #include "SoftwareRenderer.h"
+#include "Texture.h"
+#include "TextureManager.h"
 
 #define TINYOBJLOADER_IMPLEMENTATION // define this in only *one* .cc
 #include "tiny_obj_loader.h"
@@ -23,7 +25,6 @@ namespace g3dcommon
 
   void TriangleMesh::Load(const std::string& objName)
   {
-    std::string inputfile = "\\..\\..\\resource\\test.obj";
     tinyobj::attrib_t attrib;
     std::vector<tinyobj::shape_t> shapes;
     std::vector<tinyobj::material_t> materials;
@@ -41,22 +42,9 @@ namespace g3dcommon
       return;
     }
 
-    maxRadius = 0.f;
-    for (size_t i = 0; i < attrib.vertices.size(); i += 3)
-    {
-      Vertex vertex;
-      vertex.position = Vector3D(attrib.vertices[i], attrib.vertices[i + 1], attrib.vertices[i + 2]);
-      vertex.color = { 0.f, 1.f, 0.f, 1.f };
-      vertex.newColor = { 0.f, 1.f, 0.f, 1.f };
-      vertices.push_back(vertex);
-      float len = vertex.position.Norm2();
-      if (len > maxRadius)
-      {
-        maxRadius = len;
-      }
-    }
-    maxRadius = sqrt(maxRadius);
 
+    maxRadius = 0.f;
+    int vetext = 0;
     // Loop over shapes
     for (size_t s = 0; s < shapes.size(); s++)
     {
@@ -65,6 +53,9 @@ namespace g3dcommon
 
       for (size_t f = 0; f < shapes[s].mesh.num_face_vertices.size(); f++)
       {
+        // per-face material
+        size_t texIndex = TextureManager::GetInstance().LoadTexture(basePath.c_str(), materials[shapes[s].mesh.material_ids[f]].diffuse_texname);
+
         size_t fv = shapes[s].mesh.num_face_vertices[f];
         Triangle triangle;
         // Loop over vertices in the face.
@@ -74,26 +65,48 @@ namespace g3dcommon
           tinyobj::real_t vx = attrib.vertices[3 * idx.vertex_index + 0];
           tinyobj::real_t vy = attrib.vertices[3 * idx.vertex_index + 1];
           tinyobj::real_t vz = attrib.vertices[3 * idx.vertex_index + 2];
-          tinyobj::real_t nx = attrib.normals[3 * idx.normal_index + 0];
-          tinyobj::real_t ny = attrib.normals[3 * idx.normal_index + 1];
-          tinyobj::real_t nz = attrib.normals[3 * idx.normal_index + 2];
+//           tinyobj::real_t nx = attrib.normals[3 * idx.normal_index + 0];
+//           tinyobj::real_t ny = attrib.normals[3 * idx.normal_index + 1];
+//           tinyobj::real_t nz = attrib.normals[3 * idx.normal_index + 2];
           Vertex vertex;
           vertex.position = Vector3D(vx, vy, vz);
-          triangle.vertices[v] = vertex;
-          indexs.push_back(idx.vertex_index);
-          //tinyobj::real_t tx = attrib.texcoords[2 * idx.texcoord_index + 0];
-          //tinyobj::real_t ty = attrib.texcoords[2 * idx.texcoord_index + 1];
+          vertex.textureIndex = texIndex;
+
+          indexs.push_back(vetext);
+          ++vetext;
+
+          tinyobj::real_t tx = 0;
+          tinyobj::real_t ty = 0;
+          if (idx.texcoord_index > -1)
+          {
+            tx = attrib.texcoords[2 * idx.texcoord_index + 0];
+            ty = attrib.texcoords[2 * idx.texcoord_index + 1];
+          }
           // Optional: vertex colors
-          // tinyobj::real_t red = attrib.colors[3*idx.vertex_index+0];
-          // tinyobj::real_t green = attrib.colors[3*idx.vertex_index+1];
-          // tinyobj::real_t blue = attrib.colors[3*idx.vertex_index+2];
+          tinyobj::real_t red = attrib.colors[3 * idx.vertex_index + 0];
+          tinyobj::real_t green = attrib.colors[3 * idx.vertex_index + 1];
+          tinyobj::real_t blue = attrib.colors[3 * idx.vertex_index + 2];
+
+          triangle.vertices[v] = vertex;
+          vertex.color = { red, green, blue, 1.f };
+          vertex.newColor = vertex.color;
+          vertex.u = tx;
+          vertex.v = ty;
+          vertices.push_back(vertex);
+
+          float len = vertex.position.Norm2();
+          if (len > maxRadius)
+          {
+            maxRadius = len;
+          }
+
         }
         index_offset += fv;
         triangles.push_back(triangle);
-        // per-face material
-        shapes[s].mesh.material_ids[f];
+        ;
       }
     }
+    maxRadius = sqrt(maxRadius);
   }
 
   void TriangleMesh::Render(Renderer* renderer)

@@ -1,6 +1,8 @@
 #include "SoftwareRenderer.h"
 #include "Scene.h"
 #include "Common.h"
+#include "Texture.h"
+#include "TextureManager.h"
 #include <iostream>
 #include "Light.h"
 #include <SDL.h>
@@ -21,6 +23,7 @@ namespace g3dcommon
     bMouseButtonDown(false)
   {
     shadeModel = EGouraudShade;
+    sampler2d = new Sampler2D();
   }
 
   SoftwareRenderer::~SoftwareRenderer()
@@ -232,6 +235,13 @@ namespace g3dcommon
           float u = 1.f / (u0 + u1 + u2);
           u0 *= u; u1 *= u; u2 *= u;
           Color c = v0.newColor*u0 + v1.newColor * u1 + v2.newColor * u2;
+          if (v0.textureIndex > -1)
+          {
+            Texture* pTexture = TextureManager::GetInstance().GetTexture(v0.textureIndex);
+            float tu = v0.u*u0 + v1.u * u1 + v2.u * u2;
+            float tv = v0.v*u0 + v1.v * u1 + v2.v * u2;
+            c *= (sampler2d->SampleNearest(*pTexture, tu, tv));
+          }
           Rasterize2DPoint(static_cast<float>(sx), static_cast<float>(sy), c);
         }
       }

@@ -21,12 +21,14 @@ namespace g3dcommon
     }
 
     TGA* pTgafile = TGAOpen(const_cast<char *>((pathName + textureName).c_str()), "rb");
-    if (pTgafile == nullptr)
+    if (pTgafile == nullptr || pTgafile->last != TGA_OK)
     {
+      TGAClose(pTgafile);
       std::cout << "Open TGA file: " << textureName.c_str() << " failed !" << std::endl;
       return -1;
     }
     TGAData tgaData;
+    tgaData.flags = TGA_IMAGE_DATA | TGA_IMAGE_ID | TGA_RGB;
     if (TGAReadImage(pTgafile, &tgaData) != TGA_OK)
     {
       TGAClose(pTgafile);

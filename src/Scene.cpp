@@ -4,24 +4,22 @@
 
 #include <iostream>
 
-
-
 namespace g3dcommon
 {
 
-  Scene::Scene():
+  Scene::Scene() :
     camera(nullptr)
   {
     TriangleMesh* mesh = new TriangleMesh;
-    mesh->Load("cube.obj");
+    mesh->Load("sphere.obj");
     sceneObjects.insert(std::make_pair(mesh->Index(), mesh));
 
-    auto light = new DirectionalLight({ 0.2f, 0.2f, 0.2f }, { -1, 0, 0 });
-    sceneLights.push_back(light);
     auto light1 = new PointLight({ 0.1f, 0.1f, 0.1f, 1.f }, { 0, 4, -1 });
     sceneLights.push_back(light1);
-    auto light2 = new AmbientLight(Color{ 0.2f, 0.2f, 0.2f, 1.f });
-    sceneLights.push_back(light2);
+    auto light = new DirectionalLight({ 0.6f, 0.6f, 0.6f, 1.f }, { -1,-1,0 });
+    sceneLights.push_back(light);
+    auto light12 = new AmbientLight({ 0.2f, 0.2f, 0.2f, 1.f });
+    sceneLights.push_back(light12);
   }
 
   Scene::~Scene()

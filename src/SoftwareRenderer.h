@@ -8,8 +8,8 @@
 namespace g3dcommon
 {
   class Scene;
-  struct Triangle;
   class Sampler2D;
+  struct Triangle;
   struct Texture;
 
   class SoftwareRenderer : public Renderer
@@ -36,9 +36,9 @@ namespace g3dcommon
     // Rasterize a triangle.
     void RasterizeTriangle(float x0, float y0, float x1, float y1, float x2, float y2, const Color& color);
     // Rasterize a triangle based on vertex interpolation.
-    void RasterizeTriangle(const Vertex& v0, const Vertex& v1, const Vertex& v2);
-    // Draw primitives.
-    void DrawPrimitive(const std::vector<Vertex>& vertices, const std::vector<size_t>& indexs, size_t primitiveNum, EPrimitiveType primitiveType);
+    void RasterizeTriangle(const RenderVertex& v0, const RenderVertex& v1, const RenderVertex& v2, const int textureId);
+    // Rendering a triangle mesh with vertex list.
+    void RenderTriangleMesh(std::vector<RenderVertex>& vertices, size_t vertexCount, std::list<RenderTriangle>& triangles, size_t triangleCount);
     
     // Keyboard and mouse event callback.
     void KeyboardEvent(int key, int event, unsigned char mods);
@@ -46,7 +46,7 @@ namespace g3dcommon
     void CursorEvent(float x, float y);
 
     // Shade triangle.
-    void ShadeTriangle(Vertex& vertex0, Vertex& vertex1, Vertex& vertex2);
+    void ShadeTriangle(RenderVertex& vertex0, RenderVertex& vertex1, RenderVertex& vertex2);
 
   private:
 

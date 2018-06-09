@@ -112,6 +112,13 @@ namespace g3dcommon
     {
       *this /= this->Norm();
     }
+
+    inline void Zero()
+    {
+      x = 0.f;
+      y = 0.f;
+      z = 0.f;
+    }
   };
 
   inline Vector3D operator*(float f, const Vector3D& v)

@@ -5,46 +5,31 @@
 #include "Color.h"
 #include <string>
 #include <vector>
+#include <list>
 
 namespace g3dcommon
 {
+
   /**
-  * Vertex data structure.
+  * Vertext for rendering.
   */
-  struct Vertex
+  struct RenderVertex
   {
-    // Position of vertex.
     Vector3D position;
-    // Transformed position.
-    Vector3D newPosition;
-    // Normal of vertex.
     Vector3D normal;
-    // Color of vertex.
     Color color;
-    // New color of vertex.
-    Color newColor;
-    // Texture coordinates.
     float u, v;
-    // Texture index.
-    int textureIndex;
   };
 
   /**
-  * Triangle data structure.
+  * Triangle for rendering.
   */
-  struct Triangle
+  struct RenderTriangle
   {
-    // Three vertices of triangle.
-    Vertex vertices[3];
+    size_t indexs[3];
+    int textureId;
   };
 
-  enum EPrimitiveType
-  {
-    EPoint,
-    ELine,
-    ETriangle
-  };
-  
   /**
   * Shade model.
   */
@@ -65,7 +50,7 @@ namespace g3dcommon
    * does not know how to handle to the renderer so that the renderer can define
    * its own control keybindings, etc.
    */
-  class Renderer 
+  class Renderer
   {
   public:
     /**
@@ -121,19 +106,9 @@ namespace g3dcommon
     virtual void Rasterize2DLine(float x0, float y0, float x1, float y1, const Color& color) = 0;
 
     /**
-    * Rasterize a triangle.
+    *  Rendering a triangle mesh with vertex list.
     */
-    virtual void RasterizeTriangle(float x0, float y0, float x1, float y1, float x2, float y2, const Color& color) = 0;
-
-    /**
-    * Rasterize a triangle based on vertex interpolation.
-    */
-    virtual void RasterizeTriangle(const Vertex& v0, const Vertex& v1, const Vertex& v2) = 0;
-
-    /**
-    * Draw primitives from vertex arrays and index arrays.
-    */
-    virtual void DrawPrimitive(const std::vector<Vertex>& vertices, const std::vector<size_t>& indexs, size_t primitiveNum, EPrimitiveType primitiveType) = 0;
+    virtual void RenderTriangleMesh(std::vector<RenderVertex>& vertices, size_t vertexCount, std::list<RenderTriangle>& triangles, size_t triangleCount) = 0;
 
     /**
      * Respond to cursor events.
@@ -205,7 +180,7 @@ namespace g3dcommon
     */
     virtual EShadeModel GetShadeModel() const { return shadeModel; }
 
-protected:
+  protected:
     EShadeModel shadeModel;
 
   };

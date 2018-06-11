@@ -135,6 +135,14 @@ namespace g3dcommon
     return Dot(pos, n) - d;
   }
 
+  /**
+  * Determine if the floating point number is equal to 0.
+  */
+  inline bool IsFloatEqualToZero(float f)
+  {
+    return (f > -FLT_EPSILON && f < FLT_EPSILON);
+  }
+
 }
 
 #endif

@@ -227,9 +227,10 @@ namespace g3dcommon
         if (b0 == b1 && b1 == b2)
         {
           // p = u0*a + u2*b + u2*c;
-          float u0 = sqrt(dX1*dX1 + dY1 * dY1)*f1;
-          float u1 = sqrt(dX2*dX2 + dY2 * dY2)*f2;
-          float u2 = sqrt(dX0*dX0 + dY0 * dY0)*f0;
+          float u0 =  f1;
+          float u1 =  f2;
+          float u2 =  f0;
+
           float u = 1.f / (u0 + u1 + u2);
           u0 *= u; u1 *= u; u2 *= u;
           Color c = v0.color*u0 + v1.color * u1 + v2.color * u2;

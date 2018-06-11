@@ -65,7 +65,7 @@ namespace g3dcommon
       for (size_t f = 0; f < shapes[s].mesh.num_face_vertices.size(); f++)
       {
         // per-face material
-        int texIndex = -1; TextureManager::GetInstance().LoadTexture(basePath.c_str(), materials[shapes[s].mesh.material_ids[f]].diffuse_texname);
+        int texIndex = TextureManager::GetInstance().LoadTexture(basePath.c_str(), materials[shapes[s].mesh.material_ids[f]].diffuse_texname);
         size_t fv = shapes[s].mesh.num_face_vertices[f];
         Triangle triangle;
         triangle.textureId = texIndex;

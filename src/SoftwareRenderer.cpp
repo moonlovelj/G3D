@@ -293,15 +293,13 @@ namespace g3dcommon
     case G3D_KEY_w:
       if (nullptr != camera)
       {
-        Vector3D v = camera->Dir();
-        camera->Move(v*0.1f);
+        camera->MoveForward(0.1f);
       }
       break;
     case G3D_KEY_s:
       if (nullptr != camera)
       {
-        Vector3D v = camera->Dir();
-        camera->Move(-v * 0.1f);
+        camera->MoveForward(-0.1f);
       }
       break;
     case G3D_KEY_a:

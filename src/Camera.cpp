@@ -176,7 +176,7 @@ namespace g3dcommon
     Vector3D dir = Dir();
     Vector3D right = Right();
     Vector3D moveVector = dir * dist;
-    targetPos += moveVector;
+    //targetPos += moveVector;
     pos += moveVector;
     // World-to-camera translation.
     Vector3D transW2C(-pos);

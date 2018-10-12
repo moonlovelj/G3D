@@ -6,7 +6,12 @@
 #define TINYOBJLOADER_IMPLEMENTATION // define this in only *one* .cc
 #include "tiny_obj_loader.h"
 
+#ifdef _WIN32
 #include <direct.h>
+    #define getcwd _getcwd // stupid MSFT "deprecation" warning
+#else
+#include <unistd.h>
+#endif
 #include <iostream>
 
 namespace g3dcommon
@@ -28,9 +33,9 @@ namespace g3dcommon
     tinyobj::attrib_t attrib;
     std::vector<tinyobj::shape_t> shapes;
     std::vector<tinyobj::material_t> materials;
-    char buff[1000];
-    _getcwd(buff, 1000);
-    std::string basePath = std::string(buff) + "\\..\\..\\resource\\";
+    char buff[1024];
+    getcwd(buff, 1024);
+    std::string basePath = std::string(buff) + "/../resource/";
     std::string err;
     bool ret = tinyobj::LoadObj(&attrib, &shapes, &materials, &err, (basePath + objName).c_str(), basePath.c_str());
     if (!err.empty())

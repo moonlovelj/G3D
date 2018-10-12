@@ -11,11 +11,11 @@ namespace g3dcommon
     union
     {
       float m[4];
-      struct
-      {
-        float q0;
-        Vector3D qv;
-      };
+//      struct
+//      {
+//        float q0;
+//        Vector3D qv;
+//      };
       struct
       {
         float w, x, y, z;
@@ -29,7 +29,7 @@ namespace g3dcommon
 
     Quaternion(const Quaternion& q) : w(q.w), x(q.x), y(q.y), z(q.z) { }
 
-    Quaternion(float q0, const Vector3D& qv) : q0(q0), qv(qv) { }
+    //Quaternion(float q0, const Vector3D& qv) : q0(q0), qv(qv) { }
 
     Quaternion(float w, float x, float y, float z) : w(w), x(x), y(y), z(z) { }
 
@@ -68,6 +68,16 @@ namespace g3dcommon
       x = cosZ2*cosY2*sinX2 - sinZ2*sinY2*cosX2;
       y = cosZ2*sinY2*cosX2 + sinZ2*cosY2*sinX2;
       z = sinZ2*cosY2*cosX2 - cosZ2*sinY2*sinX2;
+    }
+
+    inline float q0() const
+    {
+      return w;
+    }
+
+    inline Vector3D qv() const
+    {
+      return Vector3D(x,y,z);
     }
 
     inline Quaternion operator-() const
@@ -122,7 +132,8 @@ namespace g3dcommon
      */
     Quaternion operator*(const Quaternion& q) const
     {
-      return Quaternion(q0*q.q0 - Dot(qv, q.qv), q0*q.qv + q.q0*qv + Cross(qv, q.qv));
+      Vector3D qVector3 = q0()*q.qv() + q.q0()*qv() + Cross(qv(), q.qv());
+      return Quaternion(q0()*q.q0() - Dot(qv(), q.qv()), qVector3.x, qVector3.y, qVector3.z);
     }
 
     inline float Norm() const
@@ -142,7 +153,7 @@ namespace g3dcommon
 
     Vector3D Complex() const 
     { 
-      return qv; 
+      return Vector3D(x,y,z);
     }
     void setComplex(const Vector3D& c) 
     { 
@@ -192,7 +203,7 @@ namespace g3dcommon
     */
     Vector3D RotatedVector(const Vector3D& v) const
     {
-      return (((*this) * Quaternion(0, v)) * Conjugate()).Complex();
+      return (((*this) * Quaternion(0, v.x, v.y, v.z)) * Conjugate()).Complex();
     }
   };
 

@@ -136,7 +136,7 @@ namespace g3dcommon
 
     // Compute fps.
     sysCurr = std::chrono::system_clock::now();
-    double elapsed = (static_cast<std::chrono::duration<double>>(sysCurr - sysLast)).count();
+    double elapsed = (static_cast< std::chrono::duration<double> >(sysCurr - sysLast)).count();
     if (elapsed >= 1.0)
     {
       std::cout << "FPS : " << fps << std::endl;

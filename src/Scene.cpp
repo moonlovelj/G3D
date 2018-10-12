@@ -11,7 +11,7 @@ namespace g3dcommon
     camera(nullptr)
   {
     TriangleMesh* mesh = new TriangleMesh;
-    mesh->Load("sphere.obj");
+    mesh->Load("cube.obj");
     sceneObjects.insert(std::make_pair(mesh->Index(), mesh));
 
     SceneLight* light1 = new PointLight({ 0.1f, 0.1f, 0.1f, 1.f }, { 0, 4, -1 });

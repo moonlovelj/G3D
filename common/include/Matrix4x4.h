@@ -9,7 +9,7 @@ namespace g3dcommon
   class Matrix4x4
   {
   public:
-    enum class Axis { X, Y, Z };
+    enum Axis { X, Y, Z };
 
     Matrix4x4():m00(0.f), m01(0.f), m02(0.f), m03(0.f),
                 m10(0.f), m11(0.f), m12(0.f), m13(0.f),

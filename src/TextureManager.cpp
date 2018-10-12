@@ -20,7 +20,7 @@ namespace g3dcommon
       }
     }
 
-    TGA* pTgafile = TGAOpen(const_cast<char *>((pathName + textureName).c_str()), "rb");
+    TGA* pTgafile = TGAOpen(const_cast<char *>((pathName + textureName).c_str()), (char *)"rb");
     if (pTgafile == nullptr || pTgafile->last != TGA_OK)
     {
       TGAClose(pTgafile);

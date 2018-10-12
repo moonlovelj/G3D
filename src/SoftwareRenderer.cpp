@@ -179,9 +179,9 @@ namespace g3dcommon
         if (sx < 0 || sx >= static_cast<int>(targetWidth)) continue;
         if (sy < 0 || sy >= static_cast<int>(targetHeight)) continue;
 
-        bool b1 = (sx - x0)*dY0 - (sy - y0)*dX0 <= FLT_EPSILON;
-        bool b2 = (sx - x1)*dY1 - (sy - y1)*dX1 <= FLT_EPSILON;
-        bool b3 = (sx - x2)*dY2 - (sy - y2)*dX2 <= FLT_EPSILON;
+        bool b1 = (sx - x0)*dY0 - (sy - y0)*dX0 <= EPS_F;
+        bool b2 = (sx - x1)*dY1 - (sy - y1)*dX1 <= EPS_F;
+        bool b3 = (sx - x2)*dY2 - (sy - y2)*dX2 <= EPS_F;
         if (b1 == b2 && b2 == b3)
         {
           Rasterize2DPoint(static_cast<float>(sx), static_cast<float>(sy), color);
@@ -221,9 +221,9 @@ namespace g3dcommon
         float f1 = (sx - x1)*dY1 - (sy - y1)*dX1;
         float f2 = (sx - x2)*dY2 - (sy - y2)*dX2;
 
-        bool b0 = f0 <= FLT_EPSILON;
-        bool b1 = f1 <= FLT_EPSILON;
-        bool b2 = f2 <= FLT_EPSILON;
+        bool b0 = f0 <= EPS_F;
+        bool b1 = f1 <= EPS_F;
+        bool b2 = f2 <= EPS_F;
         if (b0 == b1 && b1 == b2)
         {
           // p = u0*a + u2*b + u2*c;

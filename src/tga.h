@@ -93,16 +93,16 @@ enum {  TGA_OK = 0, 		/* success */
 
 /* text strings corresponding to the error codes */
 static char*
-tga_error_strings[] = {
-	"Success",
-	"Error",
-	"Out of memory",
-	"Failed to open file",
-	"Seek failed",
-	"Read failed",
-	"Write failed",
-	"Unknown sub-format"
-};
+    tga_error_strings[] = {
+        (char *) "Success",
+        (char *) "Error",
+        (char *) "Out of memory",
+        (char *) "Failed to open file",
+        (char *) "Seek failed",
+        (char *) "Read failed",
+        (char *) "Write failed",
+        (char *) "Unknown sub-format"
+    };
 
 
 #if SIZEOF_UNSIGNED_INT == 4

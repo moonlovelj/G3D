@@ -1,4 +1,5 @@
 #include "Texture.h"
+#include <cmath>
 
 namespace g3dcommon
 {
@@ -17,8 +18,8 @@ namespace g3dcommon
 
   Color Sampler2D::SampleNearest(const Texture& tex, float u, float v)
   {
-    int x = static_cast<int>(floor((tex.width - 1) * u + 0.5f));
-    int y = static_cast<int>(floor((tex.height - 1) * v + 0.5f));
+    int x = static_cast<int>(std::floor((tex.width - 1) * u + 0.5f));
+    int y = static_cast<int>(std::floor((tex.height - 1) * v + 0.5f));
     x = std::min(std::max(x, 0), static_cast<int>(tex.width - 1));
     y = std::min(std::max(y, 0), static_cast<int>(tex.height - 1));
     size_t index = 4 * (y * tex.width + x);

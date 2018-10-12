@@ -10,7 +10,7 @@ set(G3D_SOURCE_LIST
 	Light.cpp
 	Texture.cpp
 	TextureManager.cpp
-	tga.c
+	tga.cpp
 	tgaread.c
 	tgawrite.c
 )

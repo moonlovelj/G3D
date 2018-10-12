@@ -140,7 +140,7 @@ namespace g3dcommon
   */
   inline bool IsFloatEqualToZero(float f)
   {
-    return (f > -FLT_EPSILON && f < FLT_EPSILON);
+    return (f > -EPS_F && f < EPS_F);
   }
 
 }

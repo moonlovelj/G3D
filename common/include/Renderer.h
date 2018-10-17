@@ -101,6 +101,11 @@ namespace g3dcommon
     virtual void Rasterize2DPoint(float x, float y, const Color& color) = 0;
 
     /**
+    * Rasterize a point with z buffer.
+    */
+    virtual void Rasterize2DPointWithZ(float x, float y, float z, const Color& color) = 0;
+
+    /**
     * Rasterize a line.
     */
     virtual void Rasterize2DLine(float x0, float y0, float x1, float y1, const Color& color) = 0;

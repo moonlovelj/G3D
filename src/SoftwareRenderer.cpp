@@ -31,7 +31,8 @@ namespace g3dcommon
 
   void SoftwareRenderer::Init()
   {
-    camera = new Camera(Vector3D(5, 0, -5), Vector3D(0, 0, 0), Vector3D(0, 1, 0), 90, 1, 500, targetWidth, targetHeight);
+    zBuffer.resize(targetWidth* targetHeight, std::numeric_limits<float>::max());
+    camera = new Camera(Vector3D(0, 0, -7), Vector3D(0, 0, 0), Vector3D(0, 1, 0), 90, 1, 500, targetWidth, targetHeight);
     if (scene)
     {
       scene->SetCamera(camera);
@@ -53,6 +54,7 @@ namespace g3dcommon
 
   void SoftwareRenderer::Render()
   {
+    zBuffer.assign(zBuffer.size(), std::numeric_limits<float>::max());
     if (NULL != scene)
     {
       scene->Render(this);
@@ -72,6 +74,26 @@ namespace g3dcommon
       return;
     }
     int index = sy * targetWidth + sx;
+    renderTarget[index * 4] = color.R();
+    renderTarget[index * 4 + 1] = color.G();
+    renderTarget[index * 4 + 2] = color.B();
+    renderTarget[index * 4 + 3] = color.A();
+  }
+
+  void SoftwareRenderer::Rasterize2DPointWithZ(float x, float y, float z, const Color& color)
+  {
+    int sx = static_cast<int>(floor(x + 0.5f));
+    int sy = static_cast<int>(floor(targetHeight - 1 - y + 0.5f));
+    if (sx < 0 || sx >= static_cast<int>(targetWidth) || sy < 0 || sy >= static_cast<int>(targetHeight))
+    {
+      return;
+    }
+    int index = sy * targetWidth + sx;
+    if(z > zBuffer[index])
+    {
+      return;
+    }
+    zBuffer[index] = z;
     renderTarget[index * 4] = color.R();
     renderTarget[index * 4 + 1] = color.G();
     renderTarget[index * 4 + 2] = color.B();
@@ -190,11 +212,59 @@ namespace g3dcommon
     }
   }
 
+  void SoftwareRenderer::RasterizeTriangle(const RenderVertex& v0, const RenderVertex& v1, const RenderVertex& v2, const Color& color)
+  {
+    float x0 = v0.position.x, y0 = v0.position.y, z0 = v0.position.z;
+    float x1 = v1.position.x, y1 = v1.position.y, z1 = v1.position.z;
+    float x2 = v2.position.x, y2 = v2.position.y, z2 = v2.position.z;
+
+    if ((x0 < 0 && x1 < 0 && x2 < 0) ||
+        (y0 < 0 && y1 < 0 && y2 < 0) ||
+        (x0 >= targetWidth && x1 >= targetWidth && x2 >= targetWidth) ||
+        (y0 >= targetHeight && y1 >= targetHeight && y2 >= targetHeight))
+      return;
+
+    float dY0 = y1 - y0, dY1 = y2 - y1, dY2 = y0 - y2;
+    float dX0 = x1 - x0, dX1 = x2 - x1, dX2 = x0 - x2;
+
+    int minX = static_cast<int>(std::min(std::min(x0, x1), x2) + 0.5f);
+    int minY = static_cast<int>(std::min(std::min(y0, y1), y2) + 0.5f);
+    int maxX = static_cast<int>(std::max(std::max(x0, x1), x2) + 0.5f);
+    int maxY = static_cast<int>(std::max(std::max(y0, y1), y2) + 0.5f);
+
+    for (int sy = minY; sy <= maxY; sy++)
+    {
+      for (int sx = minX; sx <= maxX; sx++)
+      {
+        if (sx < 0 || sx >= static_cast<int>(targetWidth)) continue;
+        if (sy < 0 || sy >= static_cast<int>(targetHeight)) continue;
+
+        float f0 = (sx - x0)*dY0 - (sy - y0)*dX0;
+        float f1 = (sx - x1)*dY1 - (sy - y1)*dX1;
+        float f2 = (sx - x2)*dY2 - (sy - y2)*dX2;
+
+        bool b0 = f0 <= EPS_F;
+        bool b1 = f1 <= EPS_F;
+        bool b2 = f2 <= EPS_F;
+        if (b0 == b1 && b1 == b2)
+        {
+          float u0 =  f1;
+          float u1 =  f2;
+          float u2 =  f0;
+          float u = 1.f / (u0 + u1 + u2);
+          u0 *= u; u1 *= u; u2 *= u;
+          float z = z0*u0 + z1*u1 + z2*u2;
+          Rasterize2DPointWithZ(static_cast<float>(sx), static_cast<float>(sy), z, color);
+        }
+      }
+    }
+  }
+
   void SoftwareRenderer::RasterizeTriangle(const RenderVertex& v0, const RenderVertex& v1, const RenderVertex& v2, const int textureId)
   {
-    float x0 = v0.position.x, y0 = v0.position.y;
-    float x1 = v1.position.x, y1 = v1.position.y;
-    float x2 = v2.position.x, y2 = v2.position.y;
+    float x0 = v0.position.x, y0 = v0.position.y, z0 = v0.position.z;
+    float x1 = v1.position.x, y1 = v1.position.y, z1 = v1.position.z;
+    float x2 = v2.position.x, y2 = v2.position.y, z2 = v2.position.z;
 
     if ((x0 < 0 && x1 < 0 && x2 < 0) ||
       (y0 < 0 && y1 < 0 && y2 < 0) ||
@@ -226,7 +296,7 @@ namespace g3dcommon
         bool b2 = f2 <= EPS_F;
         if (b0 == b1 && b1 == b2)
         {
-          // p = u0*a + u2*b + u2*c;
+          // p = u0*a + u1*b + u2*c;
           float u0 =  f1;
           float u1 =  f2;
           float u2 =  f0;
@@ -234,6 +304,7 @@ namespace g3dcommon
           float u = 1.f / (u0 + u1 + u2);
           u0 *= u; u1 *= u; u2 *= u;
           Color c = v0.color*u0 + v1.color * u1 + v2.color * u2;
+          float z = z0*u0 + z1*u1 + z2*u2;
           if (textureId > -1)
           {
             Texture* pTexture = TextureManager::GetInstance().GetTexture(textureId);
@@ -241,7 +312,7 @@ namespace g3dcommon
             float tv = v0.v*u0 + v1.v * u1 + v2.v * u2;
             c *= (sampler2d->SampleNearest(*pTexture, tu, tv));
           }
-          Rasterize2DPoint(static_cast<float>(sx), static_cast<float>(sy), c);
+          Rasterize2DPointWithZ(static_cast<float>(sx), static_cast<float>(sy), z, c);
         }
       }
     }
@@ -275,7 +346,7 @@ namespace g3dcommon
       {
       case g3dcommon::EConstantShade:
       case g3dcommon::EFlatShade:
-        RasterizeTriangle(vertex0.position.x, vertex0.position.y, vertex1.position.x, vertex1.position.y, vertex2.position.x, vertex2.position.y, vertex0.color);
+        RasterizeTriangle(vertex0, vertex1, vertex2, vertex0.color);
         break;
       case g3dcommon::EGouraudShade:
         RasterizeTriangle(vertex0, vertex1, vertex2, triangle.textureId);

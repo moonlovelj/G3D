@@ -31,10 +31,14 @@ namespace g3dcommon
 
     // Rasterize a point.
     void Rasterize2DPoint(float x, float y, const Color& color);
+    // Rasterize a point with z buffer.
+    void Rasterize2DPointWithZ(float x, float y, float z, const Color& color);
     // Rasterize a line.
     void Rasterize2DLine(float x0, float y0, float x1, float y1, const Color& color);
     // Rasterize a triangle.
     void RasterizeTriangle(float x0, float y0, float x1, float y1, float x2, float y2, const Color& color);
+    // Rasterize a triangle with RenderVertex(with z buffer).
+    void RasterizeTriangle(const RenderVertex& v0, const RenderVertex& v1, const RenderVertex& v2, const Color& color);
     // Rasterize a triangle based on vertex interpolation.
     void RasterizeTriangle(const RenderVertex& v0, const RenderVertex& v1, const RenderVertex& v2, const int textureId);
     // Rendering a triangle mesh with vertex list.
@@ -60,6 +64,8 @@ namespace g3dcommon
     Camera* camera;
     // 2D sampler.
     Sampler2D* sampler2d;
+    // 1/z buffer.
+    std::vector<float> zBuffer;
 
     // Is or not mouse button down.
     bool bMouseButtonDown;

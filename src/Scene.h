@@ -6,6 +6,7 @@
 #include "SceneObject.h"
 #include <map>
 #include <list>
+#include <vector>
 
 namespace g3dcommon
 {
@@ -14,7 +15,7 @@ namespace g3dcommon
   class Scene
   {
   public:
-    Scene();
+    Scene(const std::vector<std::string>& objs);
     ~Scene();
 
     // To render the scene.

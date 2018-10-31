@@ -72,7 +72,9 @@ namespace g3dcommon
   Vector3D Camera::ProjectToView(const Vector3D& v)
   {
     Vector4D vw(v.x, v.y, v.z, 1.f);
-    return (vw * projectionMatrix).ProjectTo3D();
+    Vector3D vp = (vw * projectionMatrix).ProjectTo3D();
+    vp.z = 1.f / v.z;
+    return vp;
   }
 
   Vector3D Camera::ConvertViewToScreen(const Vector3D& v)

@@ -6,13 +6,15 @@
 
 namespace g3dcommon
 {
-
-  Scene::Scene() :
+  Scene::Scene(const std::vector<std::string>& objs) :
     camera(nullptr)
   {
-    TriangleMesh* mesh = new TriangleMesh;
-    mesh->Load("tourus.obj");
-    sceneObjects.insert(std::make_pair(mesh->Index(), mesh));
+    for (auto name : objs)
+    {
+      TriangleMesh* mesh = new TriangleMesh;
+      mesh->Load(name);
+      sceneObjects.emplace(mesh->Index(), mesh);
+    }
 
     SceneLight* light1 = new PointLight({ 0.5f, 0.5f, 0.5f, 1.f }, { 0, 4, -1 });
     sceneLights.push_back(light1);

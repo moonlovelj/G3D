@@ -31,8 +31,8 @@ namespace g3dcommon
 
   void SoftwareRenderer::Init()
   {
-    zBuffer.resize(targetWidth* targetHeight, std::numeric_limits<float>::max());
-    camera = new Camera(Vector3D(0, 0, -7), Vector3D(0, 0, 0), Vector3D(0, 1, 0), 90, 1, 500, targetWidth, targetHeight);
+    zBuffer.resize(targetWidth* targetHeight, std::numeric_limits<float>::min());
+    camera = new Camera(Vector3D(0, 0, -7), Vector3D(0, 0, 0), Vector3D(0, 1, 0), 60, 1, 500, targetWidth, targetHeight);
     if (scene)
     {
       scene->SetCamera(camera);
@@ -54,7 +54,7 @@ namespace g3dcommon
 
   void SoftwareRenderer::Render()
   {
-    zBuffer.assign(zBuffer.size(), std::numeric_limits<float>::max());
+    zBuffer.assign(zBuffer.size(), std::numeric_limits<float>::min());
     if (NULL != scene)
     {
       scene->Render(this);
@@ -89,7 +89,7 @@ namespace g3dcommon
       return;
     }
     int index = sy * targetWidth + sx;
-    if(z > zBuffer[index])
+    if(z < zBuffer[index])
     {
       return;
     }
@@ -308,8 +308,9 @@ namespace g3dcommon
           if (textureId > -1)
           {
             Texture* pTexture = TextureManager::GetInstance().GetTexture(textureId);
-            float tu = v0.u*u0 + v1.u * u1 + v2.u * u2;
-            float tv = v0.v*u0 + v1.v * u1 + v2.v * u2;
+            // Perfect perspective texture correction.
+            float tu = (v0.u * u0 * z0 + v1.u * u1 * z1 + v2.u * u2 * z2) / z;
+            float tv = (v0.v * u0 * z0 + v1.v * u1 * z1 + v2.v * u2 * z2) / z;
             c *= (sampler2d->SampleNearest(*pTexture, tu, tv));
           }
           Rasterize2DPointWithZ(static_cast<float>(sx), static_cast<float>(sy), z, c);
@@ -346,7 +347,8 @@ namespace g3dcommon
       {
       case g3dcommon::EConstantShade:
       case g3dcommon::EFlatShade:
-        RasterizeTriangle(vertex0, vertex1, vertex2, vertex0.color);
+        //RasterizeTriangle(vertex0, vertex1, vertex2, vertex0.color);
+        RasterizeTriangle(vertex0, vertex1, vertex2, triangle.textureId);
         break;
       case g3dcommon::EGouraudShade:
         RasterizeTriangle(vertex0, vertex1, vertex2, triangle.textureId);
@@ -364,27 +366,27 @@ namespace g3dcommon
     case G3D_KEY_w:
       if (nullptr != camera)
       {
-        camera->MoveForward(0.1f);
+        camera->MoveForward(0.5f);
       }
       break;
     case G3D_KEY_s:
       if (nullptr != camera)
       {
-        camera->MoveForward(-0.1f);
+        camera->MoveForward(-0.5f);
       }
       break;
     case G3D_KEY_a:
       if (nullptr != camera)
       {
         Vector3D v = camera->Right();
-        camera->Move(-v * 0.1f);
+        camera->Move(-v * 0.5f);
       }
       break;
     case G3D_KEY_d:
       if (nullptr != camera)
       {
         Vector3D v = camera->Right();
-        camera->Move(v*0.1f);
+        camera->Move(v*0.5f);
       }
       break;
     default:

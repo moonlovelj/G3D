@@ -29,6 +29,8 @@ namespace g3dcommon
 
     Color SampleNearest(const Texture& tex, float u, float v);
 
+    Color SampleBilinear(const Texture& tex, float u, float v);
+
   private:
 
     SampleMethod method;

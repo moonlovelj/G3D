@@ -18,7 +18,7 @@ namespace g3dcommon
 
     SceneLight* light1 = new PointLight({ 0.5f, 0.5f, 0.5f, 1.f }, { 0, 4, -1 });
     sceneLights.push_back(light1);
-    SceneLight* light2 = new AmbientLight(Color{ 0.4f, 0.4f, 0.4f, 1.f });
+    SceneLight* light2 = new AmbientLight(Color{ 0.5f, 0.5f, 0.5f, 1.f });
     sceneLights.push_back(light2);
   }
 

@@ -143,6 +143,15 @@ namespace g3dcommon
     return (f > -EPS_F && f < EPS_F);
   }
 
+  /**
+  * Calculated interpolation.
+  */
+  template <typename T>
+  inline T Interpolate(const T& arg1, const T& arg2, float t)
+  {
+    return arg1 + t * (arg2 - arg1);
+  }
+
 }
 
 #endif

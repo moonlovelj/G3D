@@ -311,7 +311,7 @@ namespace g3dcommon
             // Perfect perspective texture correction.
             float tu = (v0.u * u0 * z0 + v1.u * u1 * z1 + v2.u * u2 * z2) / z;
             float tv = (v0.v * u0 * z0 + v1.v * u1 * z1 + v2.v * u2 * z2) / z;
-            c *= (sampler2d->SampleNearest(*pTexture, tu, tv));
+            c *= (sampler2d->SampleBilinear(*pTexture, tu, tv));
           }
           Rasterize2DPointWithZ(static_cast<float>(sx), static_cast<float>(sy), z, c);
         }

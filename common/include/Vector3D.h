@@ -7,141 +7,146 @@
 namespace g3dcommon
 {
 
-  /**
-  * Defines 3D vectors.
-  */
-  class Vector3D
-  {
-  public:
-    union
+    /**
+    * Defines 3D vectors.
+    */
+    class Vector3D
     {
-      float m[3];
-      struct
-      {
-        float x, y, z;
-      };
+    public:
+        union
+        {
+            float m[3];
+            struct
+            {
+                float x, y, z;
+            };
+        };
+
+        Vector3D()
+            : x(0.f), y(0.f), z(0.f)
+        {}
+
+        Vector3D(float x, float y, float z)
+            : x(x), y(y), z(z)
+        {}
+
+        Vector3D(const Vector3D &v)
+            : x(v.x), y(v.y), z(v.z)
+        {}
+
+        inline float &operator[](const int &index)
+        {
+            return m[index];
+        }
+
+        inline const float &operator[](const int &index) const
+        {
+            return m[index];
+        }
+
+        inline Vector3D operator-() const
+        {
+            return Vector3D(-x, -y, -z);
+        }
+
+        inline Vector3D operator+(const Vector3D &v) const
+        {
+            return Vector3D(x + v.x, y + v.y, z + v.z);
+        }
+
+        inline Vector3D operator-(const Vector3D &v) const
+        {
+            return Vector3D(x - v.x, y - v.y, z - v.z);
+        }
+
+        inline Vector3D operator*(float f) const
+        {
+            return Vector3D(x * f, y * f, z * f);
+        }
+
+        inline Vector3D operator/(float f) const
+        {
+            const float rf = 1.f / f;
+            return Vector3D(x * rf, y * rf, z * rf);
+        }
+
+        inline void operator+=(const Vector3D &v)
+        {
+            x += v.x;
+            y += v.y;
+            z += v.z;
+        }
+
+        inline void operator-=(const Vector3D &v)
+        {
+            x -= v.x;
+            y -= v.y;
+            z -= v.z;
+        }
+
+        inline void operator*=(float f)
+        {
+            x *= f;
+            y *= f;
+            z *= f;
+        }
+
+        inline void operator/=(float f)
+        {
+            const float rf = 1.f / f;
+            x *= rf;
+            y *= rf;
+            z *= rf;
+        }
+
+        inline float Norm() const
+        {
+            return sqrt(x * x + y * y + z * z);
+        }
+
+        inline float Norm2() const
+        {
+            return x * x + y * y + z * z;
+        }
+
+        inline Vector3D Unit() const
+        {
+            return *this / this->Norm();
+        }
+
+        inline void Normalize()
+        {
+            *this /= this->Norm();
+        }
+
+        inline void Zero()
+        {
+            x = 0.f;
+            y = 0.f;
+            z = 0.f;
+        }
     };
 
-    Vector3D() : x(0.f), y(0.f), z(0.f) { }
-
-    Vector3D(float x, float y, float z) : x(x), y(y), z(z) { }
-
-    Vector3D(const Vector3D& v) : x(v.x), y(v.y), z(v.z) { }
-
-    inline float& operator[](const int& index)
+    inline Vector3D operator*(float f, const Vector3D &v)
     {
-      return m[index];
+        return v * f;
     }
 
-    inline const float& operator[](const int& index) const
+    inline float Dot(const Vector3D &v1, const Vector3D &v2)
     {
-      return m[index];
+        return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
     }
 
-    inline Vector3D operator-() const
+    inline Vector3D Cross(const Vector3D &v1, const Vector3D &v2)
     {
-      return Vector3D(-x, -y, -z);
+        return Vector3D(v1.y * v2.z - v1.z * v2.y,
+                        v1.z * v2.x - v1.x * v2.z,
+                        v1.x * v2.y - v1.y * v2.x);
     }
 
-    inline Vector3D operator+(const Vector3D& v) const
-    {
-      return Vector3D(x + v.x, y + v.y, z + v.z);
-    }
-
-    inline Vector3D operator-(const Vector3D& v) const
-    {
-      return Vector3D(x - v.x, y - v.y, z - v.z);
-    }
-
-    inline Vector3D operator*(float f) const
-    {
-      return Vector3D(x * f, y * f, z * f);
-    }
-
-    inline Vector3D operator/(float f) const
-    {
-      const float rf = 1.f / f;
-      return Vector3D(x * rf, y * rf, z * rf);
-    }
-
-    inline void operator+=(const Vector3D& v)
-    {
-      x += v.x;
-      y += v.y;
-      z += v.z;
-    }
-
-    inline void operator-=(const Vector3D& v)
-    {
-      x -= v.x;
-      y -= v.y;
-      z -= v.z;
-    }
-
-    inline void operator*=(float f)
-    {
-      x *= f;
-      y *= f;
-      z *= f;
-    }
-
-    inline void operator/=(float f)
-    {
-      const float rf = 1.f / f;
-      x *= rf;
-      y *= rf;
-      z *= rf;
-    }
-
-    inline float Norm() const
-    {
-      return sqrt(x*x + y*y + z*z);
-    }
-
-    inline float Norm2() const
-    {
-      return x*x + y*y + z*z;
-    }
-
-    inline Vector3D Unit() const
-    {
-      return *this / this->Norm();
-    }
-
-    inline void Normalize()
-    {
-      *this /= this->Norm();
-    }
-
-    inline void Zero()
-    {
-      x = 0.f;
-      y = 0.f;
-      z = 0.f;
-    }
-  };
-
-  inline Vector3D operator*(float f, const Vector3D& v)
-  {
-    return v*f;
-  }
-
-  inline float Dot(const Vector3D& v1, const Vector3D& v2)
-  {
-    return v1.x*v2.x + v1.y*v2.y + v1.z*v2.z;
-  }
-
-  inline Vector3D Cross(const Vector3D& v1, const Vector3D& v2)
-  {
-    return Vector3D(v1.y*v2.z - v1.z*v2.y,
-      v1.z*v2.x - v1.x*v2.z,
-      v1.x*v2.y - v1.y*v2.x);
-  }
-
-  std::ostream& operator<<(std::ostream& os, const Vector3D& v);
+    std::ostream &operator<<(std::ostream &os, const Vector3D &v);
 
 }
-
 
 
 #endif

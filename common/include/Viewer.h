@@ -8,59 +8,59 @@
 
 namespace g3dcommon
 {
-  /**
-  * Provides SDL context, window display, and event handling routines.
-  * A user application may draw to the window's context by providing
-  * a user renderer. The viewer manages other display components such as the
-  * zoom views, text OSD, etc. It also takes care of window event handling and
-  * event passing, through which the renderer may interact with user inputs.
-  */
-  class Viewer
-  {
-  public:
-    Viewer(size_t width = 960, size_t height = 640);
-    ~Viewer();
-
-    bool Init();
-
-    void Start();
-
-    void SetRenderer(Renderer* renderer);
-
-  private:
     /**
-    * Main update loop.
+    * Provides SDL context, window display, and event handling routines.
+    * A user application may draw to the window's context by providing
+    * a user renderer. The viewer manages other display components such as the
+    * zoom views, text OSD, etc. It also takes care of window event handling and
+    * event passing, through which the renderer may interact with user inputs.
     */
-    static void Update();
+    class Viewer
+    {
+    public:
+        Viewer(size_t width = 960, size_t height = 640);
+        ~Viewer();
 
-    /**
-    * Process close window.
-    */
-    static void Close();
+        bool Init();
 
-    // Quit window mark.
-    static bool bQuit;
+        void Start();
 
-    // Window properties.
-    static SDL_Window* window;
-    static SDL_Surface* screenSurface;
-    static size_t bufferWidth;
-    static size_t bufferHeight;
+        void SetRenderer(Renderer *renderer);
 
-    // Framebuffer for renderer.
-    static std::vector<unsigned char> framebuffer;
+    private:
+        /**
+        * Main update loop.
+        */
+        static void Update();
 
-    // Event handler
-    static SDL_Event sdlEvent;
+        /**
+        * Process close window.
+        */
+        static void Close();
 
-    // User space renderer
-    static Renderer* renderer;
+        // Quit window mark.
+        static bool bQuit;
 
-    // For compute fps.
-    static int fps;
-    static std::chrono::time_point<std::chrono::system_clock> sysLast;
-    static std::chrono::time_point<std::chrono::system_clock> sysCurr;
-  };
+        // Window properties.
+        static SDL_Window *window;
+        static SDL_Surface *screenSurface;
+        static size_t bufferWidth;
+        static size_t bufferHeight;
+
+        // Framebuffer for renderer.
+        static std::vector<unsigned char> framebuffer;
+
+        // Event handler
+        static SDL_Event sdlEvent;
+
+        // User space renderer
+        static Renderer *renderer;
+
+        // For compute fps.
+        static int fps;
+        static std::chrono::time_point<std::chrono::system_clock> sysLast;
+        static std::chrono::time_point<std::chrono::system_clock> sysCurr;
+    };
 }
 
 

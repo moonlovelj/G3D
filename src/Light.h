@@ -6,63 +6,65 @@
 
 namespace g3dcommon
 {
-  class SceneLight
-  {
-  public:
-    virtual Color SampleL(const Vector3D& p, const Vector3D& n) const = 0;
-  };
+    class SceneLight
+    {
+    public:
+        virtual Color SampleL(const Vector3D &p, const Vector3D &n) const = 0;
+    };
 
+    class DirectionalLight: public SceneLight
+    {
+    public:
+        DirectionalLight(const Color &rad, const Vector3D &lightDir);
+        Color SampleL(const Vector3D &p, const Vector3D &n) const;
+    private:
+        Color radiance;
+        Vector3D dirToLight;
+    };
 
-  class DirectionalLight : public SceneLight
-  {
-  public:
-    DirectionalLight(const Color& rad, const Vector3D& lightDir);
-    Color SampleL(const Vector3D& p, const Vector3D& n) const;
-  private:
-    Color radiance;
-    Vector3D dirToLight;
-  };
+    class PointLight: public SceneLight
+    {
+    public:
+        PointLight(const Color &rad, const Vector3D &pos, float c = 0.f, float l = 0.05f, float q = 0.f);
+        Color SampleL(const Vector3D &p, const Vector3D &n) const;
+    private:
+        Color radiance;
+        Vector3D position;
+        // Constant attenuation factor, linear attenuation factor, secondary attenuation factor.
+        float kc, kl, kq;
+    };
 
-  class PointLight : public SceneLight
-  {
-  public:
-    PointLight(const Color& rad, const Vector3D& pos, float c = 0.f, float l = 0.05f, float q = 0.f);
-    Color SampleL(const Vector3D& p, const Vector3D& n) const;
-  private:
-    Color radiance;
-    Vector3D position;
-    // Constant attenuation factor, linear attenuation factor, secondary attenuation factor.
-    float kc, kl, kq;
-  };
+    class SpotLight: public SceneLight
+    {
+    public:
+        SpotLight(const Color &rad, const Vector3D &pos, const Vector3D &dir,
+                  float angle, float c = 0.f, float l = 0.05f, float q = 0.f, int p = 2);
 
-  class SpotLight : public SceneLight
-  {
-  public:
-    SpotLight(const Color& rad, const Vector3D& pos,const Vector3D& dir, 
-      float angle, float c = 0.f, float l = 0.05f, float q = 0.f, int p = 2);
+        Color SampleL(const Vector3D &p, const Vector3D &n) const;
 
-    Color SampleL(const Vector3D& p, const Vector3D& n) const;
+    private:
+        Color radiance;
+        Vector3D position;
+        Vector3D direction;
+        float angle;
+        // Constant attenuation factor, linear attenuation factor, secondary attenuation factor.
+        float kc, kl, kq;
+        // Exponent factor.
+        int pf;
+    };
 
-  private:
-    Color radiance;
-    Vector3D position;
-    Vector3D direction;
-    float angle;
-    // Constant attenuation factor, linear attenuation factor, secondary attenuation factor.
-    float kc, kl, kq;
-    // Exponent factor.
-    int pf;
-  }; 
+    class AmbientLight: public SceneLight
+    {
+    public:
+        AmbientLight(const Color &rad)
+            : radiance(rad)
+        {}
 
-  class AmbientLight : public SceneLight
-  {
-  public:
-    AmbientLight(const Color& rad) : radiance(rad) { }
-
-    Color SampleL(const Vector3D& p, const Vector3D& n) const { return radiance; }
-  private:
-    Color radiance;
-  };
+        Color SampleL(const Vector3D &p, const Vector3D &n) const
+        { return radiance; }
+    private:
+        Color radiance;
+    };
 
 }
 #endif

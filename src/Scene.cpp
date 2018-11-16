@@ -6,47 +6,48 @@
 
 namespace g3dcommon
 {
-  Scene::Scene(const std::vector<std::string>& objs) :
-    camera(nullptr)
-  {
-    for (auto name : objs)
+    Scene::Scene(const std::vector<std::string> &objs)
+        :
+        camera(nullptr)
     {
-      TriangleMesh* mesh = new TriangleMesh;
-      mesh->Load(name);
-      sceneObjects.emplace(mesh->Index(), mesh);
+        for (auto name : objs)
+        {
+            TriangleMesh *mesh = new TriangleMesh;
+            mesh->Load(name);
+            sceneObjects.emplace(mesh->Index(), mesh);
+        }
+
+        SceneLight *light1 = new PointLight({0.5f, 0.5f, 0.5f, 1.f}, {0, 4, -1});
+        sceneLights.push_back(light1);
+        SceneLight *light2 = new AmbientLight(Color{0.5f, 0.5f, 0.5f, 1.f});
+        sceneLights.push_back(light2);
     }
 
-    SceneLight* light1 = new PointLight({ 0.5f, 0.5f, 0.5f, 1.f }, { 0, 4, -1 });
-    sceneLights.push_back(light1);
-    SceneLight* light2 = new AmbientLight(Color{ 0.5f, 0.5f, 0.5f, 1.f });
-    sceneLights.push_back(light2);
-  }
-
-  Scene::~Scene()
-  {
-
-  }
-
-  void Scene::Render(Renderer* renderer)
-  {
-    if (nullptr == renderer)
+    Scene::~Scene()
     {
-      return;
+
     }
 
-    for (auto object : sceneObjects)
+    void Scene::Render(Renderer *renderer)
     {
-      object.second->Render(renderer);
-    }
-  }
+        if (nullptr == renderer)
+        {
+            return;
+        }
 
-  void Scene::SetCamera(Camera* camera)
-  {
-    this->camera = camera;
-    for (auto object : sceneObjects)
-    {
-      object.second->SetCamera(camera);
+        for (auto object : sceneObjects)
+        {
+            object.second->Render(renderer);
+        }
     }
-  }
+
+    void Scene::SetCamera(Camera *camera)
+    {
+        this->camera = camera;
+        for (auto object : sceneObjects)
+        {
+            object.second->SetCamera(camera);
+        }
+    }
 
 }

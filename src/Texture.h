@@ -6,35 +6,46 @@
 
 namespace g3dcommon
 {
-  enum SampleMethod
-  {
-    NEAREST,
-    BILINEAR,
-    TRILINEAR
-  };
+    static const int kMaxMipLevels = 14;
 
-  struct Texture 
-  {
-    size_t width;
-    size_t height;
-    std::string name;
-    std::vector<unsigned char> texels;
-  };
+    enum SampleMethod
+    {
+        NEAREST,
+        BILINEAR,
+        TRILINEAR
+    };
 
-  class Sampler2D
-  {
-  public:
-    Sampler2D(SampleMethod method = NEAREST);
-    ~Sampler2D();
+    struct MipLevel
+    {
+        size_t width;
+        size_t height;
+        std::vector<unsigned char> texels;
+    };
 
-    Color SampleNearest(const Texture& tex, float u, float v);
+    struct Texture
+    {
+        size_t width;
+        size_t height;
+        std::string name;
+        std::vector<MipLevel> mipmap;
+    };
 
-    Color SampleBilinear(const Texture& tex, float u, float v);
+    class Sampler2D
+    {
+    public:
+        Sampler2D(SampleMethod method = NEAREST);
+        ~Sampler2D();
 
-  private:
+        void GenerateMips(Texture &tex, int startLevel);
 
-    SampleMethod method;
-  };
+        Color SampleNearest(const Texture &tex, float u, float v, int level = 0);
+
+        Color SampleBilinear(const Texture &tex, float u, float v, int level = 0);
+
+    private:
+
+        SampleMethod method;
+    };
 
 }
 

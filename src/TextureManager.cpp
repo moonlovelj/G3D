@@ -37,23 +37,24 @@ namespace g3dcommon
     }
 
     Texture * texture = new Texture();
+    texture->mipmap.resize(1);
     texture->name = textureName;
-    texture->width = pTgafile->hdr.width;
-    texture->height = pTgafile->hdr.height;
+    texture->mipmap[0].width = texture->width = pTgafile->hdr.width;
+    texture->mipmap[0].height = texture->height = pTgafile->hdr.height;
     size_t colorChannels = pTgafile->hdr.depth / 8;
     size_t colorNum = texture->width * texture->height;
-    texture->texels.resize(4 * colorNum);
+    texture->mipmap[0].texels.resize(4 * colorNum);
     if (colorChannels == 3)
     {
       for (size_t i = 0; i < colorNum; i++)
       {
-        memcpy(&texture->texels[i * 4], &tgaData.img_data[i * 3], 3);
-        texture->texels[i * 4 + 3] = 255;
+        memcpy(&texture->mipmap[0].texels[i * 4], &tgaData.img_data[i * 3], 3);
+        texture->mipmap[0].texels[i * 4 + 3] = 255;
       }
     }
     else if (colorChannels == 4)
     {
-      memcpy(&texture->texels[0], tgaData.img_data, 4 * texture->width * texture->height);
+      memcpy(&texture->mipmap[0].texels[0], tgaData.img_data, 4 * texture->width * texture->height);
     }
     else
     {
@@ -61,6 +62,8 @@ namespace g3dcommon
       delete texture;
       return -1;
     }
+    Sampler2D sample2D;
+    sample2D.GenerateMips(*texture,0);
     size_t textureId = textures.size();
     textures.insert(std::make_pair(textureId, texture));
     return textureId;
